@@ -98,7 +98,7 @@ class MiClase
     )
 
     def mensaje_3
-        puts 'mensaje_1'
+        puts 'mensaje_3'
         5
     end
 end

@@ -5,7 +5,7 @@ require_relative 'pre_and_post'
 class Class
     include BeforeAndAfter
     include Invariant
-    include PreAndPost
+    #include PreAndPost
 end
 
 =begin
@@ -13,49 +13,41 @@ end
 class MiClase
     before_and_after_each_call(
         # Bloque Before. Se ejecuta antes de cada mensaje
-        proc{ puts 'Entré a un mensaje' },
+        proc { puts "Entré a un mensaje" },
         # Bloque After. Se ejecuta después de cada mensaje
-        proc{ puts 'Salí de un mensaje' }
+        proc { puts "Salí de un mensaje" }
     )
 
     def mensaje_1
-        puts 'mensaje_1'
+        puts "mensaje_1"
         return 5
     end
+
+    def mensaje_2
+        puts "mensaje_2"
+        return 3
+    end
+
 end
 
-class MiClase2
+# La reabrimos
+class MiClase
     before_and_after_each_call(
         # Bloque Before. Se ejecuta antes de cada mensaje
-        proc{ puts 'Entré a un mensaje 2' },
+        proc { puts 'Entré a un mensaje 2' },
         # Bloque After. Se ejecuta después de cada mensaje
-        proc{ puts 'Salí de un mensaje 2' }
+        proc { puts 'Salí de un mensaje 2' }
     )
 
-    def mensaje_1(edad)
-        puts 'mensaje_1 ' + edad
+    def mensaje_3
+        puts 'mensaje_3'
         5
     end
 end
 
-class MiClase2
-    before_and_after_each_call(
-        # Bloque Before. Se ejecuta antes de cada mensaje
-        proc{ puts 'Entré a un mensaje 3' },
-        # Bloque After. Se ejecuta después de cada mensaje
-        proc{ puts 'Salí de un mensaje 3' }
-    )
-
-    def mensaje_2
-        puts 'mensaje_2'
-        3
-    end
-
-end
-
 MiClase.new.mensaje_1
-#MiClase2.new.mensaje_1('50')
-#MiClase2.new.mensaje_2
+MiClase.new.mensaje_2
+MiClase.new.mensaje_3
 =end
 
 # Prueba de invariantes
@@ -77,13 +69,27 @@ class Guerrero
     end
 end
 
-a = Guerrero.new(1,10)
-b = Guerrero.new(2,10)
+class Guerrero
+    attr_accessor :tonto
+
+    def initialize(vida, fuerza, tonto)
+        @vida = vida
+        @fuerza = fuerza
+        @tonto = tonto
+    end
+
+    invariant { tonto == true } # Aca le pinta tirar stack level too deep
+
+end
+
+a = Guerrero.new(1,10, true)
+b = Guerrero.new(2,10, false)
 a.atacar(b)
 =end
 
 # Prueba de pre y post
 
+=begin
 class Operaciones
     #precondición de dividir
     pre { divisor != 0 }
@@ -103,3 +109,4 @@ end
 
 puts Operaciones.new.dividir(4,2)
 puts Operaciones.new.dividir(4,0)
+=end
