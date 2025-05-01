@@ -1,14 +1,15 @@
 require_relative 'before_and_after'
-require_relative 'invariants'
+require_relative 'invariant'
 require_relative 'pre_and_post'
 
 class Class
     include BeforeAndAfter
     include Invariant
+    include PreAndPost
 end
 
 =begin
-# Prueba de before y after
+# Clase de Prueba de Before y After
 class MiClase
     before_and_after_each_call(
         # Bloque Before. Se ejecuta antes de cada mensaje
@@ -57,8 +58,9 @@ MiClase.new.mensaje_1
 #MiClase2.new.mensaje_2
 =end
 
-=begin
 # Prueba de invariantes
+
+=begin
 class Guerrero
     attr_accessor :vida, :fuerza
 
@@ -67,20 +69,37 @@ class Guerrero
       @fuerza = fuerza
     end
 
-    #invariant { fuerza > 0 && fuerza < 100 }
     invariant { vida >= 0 }
+    invariant { fuerza > 0 && fuerza < 100 }
 
     def atacar(otro)
         otro.vida -= fuerza
-        #otro.recibir_danio(fuerza) # Hago esto en vez de otro.vida -= fuerza pq no toma los accessors :(
-    end
-
-    def recibir_danio(danio)
-        self.vida -= danio
     end
 end
 
-a = Guerrero.new(-10,10)
-b = Guerrero.new(0,10)
+a = Guerrero.new(1,10)
+b = Guerrero.new(2,10)
 a.atacar(b)
 =end
+
+# Prueba de pre y post
+
+class Operaciones
+    #precondición de dividir
+    pre { divisor != 0 }
+    #postcondición de dividir
+    post { |result| result * divisor == dividendo }
+    def dividir(dividendo, divisor)
+        dividendo / divisor
+    end
+
+
+    # este metodo no se ve afectado por ninguna pre/post condición
+    def restar(minuendo, sustraendo)
+        minuendo - sustraendo
+    end
+
+end
+
+puts Operaciones.new.dividir(4,2)
+puts Operaciones.new.dividir(4,0)
