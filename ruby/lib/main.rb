@@ -3,11 +3,12 @@ require_relative 'invariants'
 require_relative 'pre_and_post'
 
 class Class
-    include AntesYDespues
-    include Invariante
+    include BeforeAndAfter
+    include Invariant
 end
 
 =begin
+# Prueba de before y after
 class MiClase
     before_and_after_each_call(
         # Bloque Before. Se ejecuta antes de cada mensaje
@@ -18,9 +19,8 @@ class MiClase
 
     def mensaje_1
         puts 'mensaje_1'
-        5
+        return 5
     end
-
 end
 
 class MiClase2
@@ -53,23 +53,26 @@ class MiClase2
 end
 
 MiClase.new.mensaje_1
-MiClase2.new.mensaje_1('50')
-MiClase2.new.mensaje_2
+#MiClase2.new.mensaje_1('50')
+#MiClase2.new.mensaje_2
 =end
 
+=begin
+# Prueba de invariantes
 class Guerrero
-    #before_and_after_each_call(proc {}, proc {puts "Sali"})
     attr_accessor :vida, :fuerza
-    # @vida = 100
+
     def initialize(vida, fuerza)
       @vida = vida
       @fuerza = fuerza
     end
-    invariant { vida >= 0}
+
     #invariant { fuerza > 0 && fuerza < 100 }
+    invariant { vida >= 0 }
 
     def atacar(otro)
-        otro.recibir_danio(fuerza) # Hago esto en vez de otro.vida -= fuerza pq no toma los accessors :(
+        otro.vida -= fuerza
+        #otro.recibir_danio(fuerza) # Hago esto en vez de otro.vida -= fuerza pq no toma los accessors :(
     end
 
     def recibir_danio(danio)
@@ -77,6 +80,7 @@ class Guerrero
     end
 end
 
-a = Guerrero.new(0,10)
+a = Guerrero.new(-10,10)
 b = Guerrero.new(0,10)
 a.atacar(b)
+=end

@@ -1,6 +1,4 @@
-require_relative 'invariants'
-
-module AntesYDespues
+module BeforeAndAfter
     attr_reader :before_procs, :after_procs # Defino getters para poder acceder en el define_method de method_added
 
     def before_and_after_each_call(before_proc, after_proc)
@@ -8,14 +6,18 @@ module AntesYDespues
         @before_procs ||= []
         @after_procs ||= []
 
-        # Añado los procs al final de las listas (solo si no son nil)
+        # Añado los procs al final de las listas
         @before_procs << before_proc
         @after_procs << after_proc
     end
 
     def method_added(method_name)
-        return if @method_added || @before_procs == nil # Evito recursión infinita ya que define_method llama a method_added
-        # Por otro lado, no hago nada si no se puso before_and_after_each_call (@before_procs será nil)
+        return if @method_added # Evito recursión infinita ya que define_method llama a method_added
+
+        if @before_procs == nil # Por otro lado, no hago nada si no se puso before_and_after_each_call (@before_procs será nil)
+            super
+            return
+        end
 
         @method_added = true
 
@@ -33,9 +35,8 @@ module AntesYDespues
                 after_proc.call(self) # Le paso la instancia que lo llamó para invariant
             end
 
-            #retorno Mepa que esto esta re de mas xd
+            retorno # Se devuelve el valor de retorno del metodo, por si se quiere utilizar
         end
         @method_added = false
     end
-
 end
