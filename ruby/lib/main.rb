@@ -3,9 +3,9 @@ require_relative 'invariant'
 require_relative 'pre_and_post'
 
 class Class
-    include BeforeAndAfter
+    include BeforeAndAfterEach
     include Invariant
-    #include PreAndPost
+    include PreAndPost
 end
 
 =begin
@@ -44,14 +44,12 @@ class MiClase
         5
     end
 end
-
 MiClase.new.mensaje_1
 MiClase.new.mensaje_2
 MiClase.new.mensaje_3
 =end
 
 # Prueba de invariantes
-
 =begin
 class Guerrero
     attr_accessor :vida, :fuerza
@@ -78,23 +76,24 @@ class Guerrero
         @tonto = tonto
     end
 
-    invariant { tonto == true } # Aca le pinta tirar stack level too deep
+    invariant {deLaMatanza == true}
 
 end
 
-a = Guerrero.new(1,10, true)
-b = Guerrero.new(2,10, false)
+a = Guerrero.new(1, 0, true)
+b = Guerrero.new(11,10, true)
+a.atacar(b)
 a.atacar(b)
 =end
-
 # Prueba de pre y post
 
-=begin
+
 class Operaciones
     #precondición de dividir
     pre { divisor != 0 }
     #postcondición de dividir
     post { |result| result * divisor == dividendo }
+
     def dividir(dividendo, divisor)
         dividendo / divisor
     end
@@ -107,6 +106,5 @@ class Operaciones
 
 end
 
-puts Operaciones.new.dividir(4,2)
+puts Operaciones.new.dividir(4, 2)
 puts Operaciones.new.dividir(4,0)
-=end

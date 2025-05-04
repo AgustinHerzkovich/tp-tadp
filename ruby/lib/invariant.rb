@@ -18,14 +18,7 @@ module Invariant
         metodos_a_modificar << :initialize # Agregamos initialize dado que este no se encuentra en los metodos de instancia de la clase
         metodos_a_modificar.each do |method_name|
             # Por cada simbolo
-            metodo_original = instance_method(method_name) #  Obtengo el unbound method
-            @avoid_recursion = true # Evito recursividad del define_method para los invariants
-            define_method(method_name) do |*args, &block|
-                retorno = metodo_original.bind(self).call(*args, &block)
-                proc_invariante.call(self, method_name) # Llamo al proc, pasandole también el nombre del metodo para evitar recursividad
-                retorno
-            end
-            @avoid_recursion = false
+            before_and_after(method_name, [], [proc_invariante])
         end
 
         # Ponerle los bloques a los nuevos metodos
