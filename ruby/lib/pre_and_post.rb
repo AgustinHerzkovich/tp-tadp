@@ -10,10 +10,12 @@ module PreAndPost
 
     def condicion(nombre, condicion) # Metodo para no repetir logica en pre y post
         proc_condicion = proc do |instancia, method_name, *args|
-            #@parametros[method_name].each_with_index do |parametro, index|
-            #    binding.local_variable_set(parametro[1], args[index])
-            #end
-            unless instancia.instance_exec(*args, &condicion)
+
+            hash = @parametros[method_name].zip(args).to_h # Creamos un hash con los parámetros y sus valores
+            contexto = Struct.new(*hash.keys).new(*hash.values) # Creamos un nuevo contexto con los parámetros y sus valores
+            nuevo_proc = proc { contexto.instance_exec(&condicion) } # Ejecutamos el bloque en ese nuevo contexto
+
+            unless nuevo_proc.call
                 raise "Excepcion: El objeto #{instancia} no cumplio con su " + nombre
             end
         end
@@ -35,8 +37,8 @@ module PreAndPost
         pre = enlistar(@precondicion)
         post = enlistar(@postcondicion)
 
-        #@parametros ||= {}
-        #@parametros[method_name] = instance_method(method_name).parameters
+        @parametros ||= {}
+        @parametros[method_name] = instance_method(method_name).parameters.map(&:last) # Almacenamos los nombres de los parametros del metodo
 
         before_and_after(method_name, pre, post)
 
