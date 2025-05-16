@@ -1,11 +1,11 @@
 require_relative 'before_and_after'
-require_relative 'invariant'
-require_relative 'pre_and_post'
+#require_relative 'invariant'
+#require_relative 'pre_and_post'
 
 class Class
     include BeforeAndAfterEach
-    include Invariant
-    include PreAndPost
+    #include Invariant
+    #include PreAndPost
 end
 
 =begin
@@ -87,7 +87,7 @@ a.atacar(b)
 =end
 # Prueba de pre y post
 
-
+=begin
 class Operaciones
     #precondición de dividir
     pre { divisor != 0 }
@@ -108,3 +108,4 @@ end
 
 puts Operaciones.new.dividir(4, 2)
 puts Operaciones.new.dividir(4,0)
+=end
