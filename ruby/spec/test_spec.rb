@@ -1,43 +1,33 @@
-# Test before and after each call
+# Test Before And After Each Call
 describe MiClase do
     describe "#mensaje_1" do
-        it 'ejecuta before y after alrededor de mensaje_1' do
-            obj = MiClase.new
+        it "se ejecuta el proc inicial, luego mensaje_1 y finalmente el proc final" do
+            a = MiClase.new
             salida_esperada = "Entré a un mensaje\nmensaje_1\nSalí de un mensaje\n"
-            expect{obj.mensaje_1}.to output(salida_esperada).to_stdout
-        end
-    end
-
-    describe "#mensaje_2" do
-        it 'ejecuta before y after alrededor de mensaje_2' do
-            obj = MiClase.new
-            salida_esperada = "Entré a un mensaje\nmensaje_2\nSalí de un mensaje\n"
-            expect{obj.mensaje_2}.to output(salida_esperada).to_stdout
+            expect{(a.mensaje_1)}.to output(salida_esperada).to_stdout
         end
     end
 
     describe "#mensaje_3" do
-        it "ejecuta el segundo before y after alrededor de mensaje_3, prueba open classes" do
-            # Reabrimos la clase
+        it "se reabre la clase y se agregan nuevos procs para antes y después" do
+            # La reabrimos
             class MiClase
                 before_and_after_each_call(
-                  # Bloque Before. Se ejecuta antes de cada mensaje
-                  proc { puts "Entré a un mensaje 2" },
-                  # Bloque After. Se ejecuta después de cada mensaje
-                  proc { puts "Salí de un mensaje 2" }
+                    # Bloque Before. Se ejecuta antes de cada mensaje
+                    proc { puts 'Entré a un mensaje 2' },
+                    # Bloque After. Se ejecuta después de cada mensaje
+                    proc { puts 'Salí de un mensaje 2' }
                 )
 
                 def mensaje_3
-                    puts "mensaje_3"
+                    puts 'mensaje_3'
                     5
                 end
             end
 
-            salida_esperada_1 = "Entré a un mensaje\nEntré a un mensaje 2\nmensaje_1\nSalí de un mensaje\nSalí de un mensaje 2\n"
-            salida_esperada_3 = "Entré a un mensaje\nEntré a un mensaje 2\nmensaje_3\nSalí de un mensaje\nSalí de un mensaje 2\n"
-            obj = MiClase.new
-            expect{obj.mensaje_1}.to output(salida_esperada_1).to_stdout
-            expect{obj.mensaje_3}.to output(salida_esperada_3).to_stdout
+            a = MiClase.new
+            salida_esperada = "Entré a un mensaje\nEntré a un mensaje 2\nmensaje_3\nSalí de un mensaje\nSalí de un mensaje 2\n"
+            expect{(a.mensaje_3)}.to output(salida_esperada).to_stdout
         end
     end
 end
@@ -74,13 +64,119 @@ end
 describe Operaciones do
     describe "#dividir" do
         it "Se divide 4 por 2 correctamente" do
-            expect(Operaciones.new.dividir(4, 2)).to eq(2)
+            operacion = Operaciones.new
+            expect(operacion.dividir(4, 2)).to eq(2)
+        end
+
+        it "Se intenta dividir 4 por 0 y se lanza una excepción por precondición no cumplida" do
+            operacion = Operaciones.new
+            expect{operacion.dividir(4, 0)}.to raise_error(RuntimeError)
         end
     end
 
-    describe "#dividir" do
-        it "Se intenta dividir 4 por 0 y se lanza una excepción por precondición no cumplida" do
-            expect{Operaciones.new.dividir(4, 0)}.to raise_error(RuntimeError)
+    describe "#restar" do
+        it "Restar no es afectado por las precondiciones y postcondiciones de dividir" do
+            operacion = Operaciones.new
+            expect(operacion.restar(4, 0)).to eq(4)
+        end
+    end
+end
+
+# Test Integral
+describe Pila do
+    describe "#initialize" do
+        it "Se intenta inicializar una pila con capacity negativa y tira excepción" do
+            expect{Pila.new(-1)}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#initialize" do
+        it "Alguien redefine initialize, se intenta inicializar una pila con un current_node != nil y tira excepción" do
+            class Pila
+                def initialize(capacity)
+                    @capacity = capacity
+                    @current_node = Node.new(nil, current_node)
+                end
+            end
+            expect{Pila.new(0)}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#push" do
+        it "Se intenta pushear un elemento pero la capacidad de la pila es 0, entonces tira excepción de precondición" do
+            expect{Pila.new(0).push(nil)}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#push" do
+        it "Alguien redefine push, se intenta pushear un elemento y no se cumple la postcondición de height > 0, lo cual arroja excepción" do
+            class Pila
+                def push(element)
+                    puts "nada"
+                end
+            end
+            expect{Pila.new(5).push(nil)}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#pop" do
+        it "Se intenta hacer pop de una pila vacía, lo cual tira excepción porque no se cumple la precondición !empty" do
+            expect{Pila.new(5).pop}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#top" do
+        it "Se intenta obtener el top de una pila vacía, lo cual tira excepción porque no se cumple la precondición !empty" do
+            expect{Pila.new(5).top}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "Funcionamiento normal" do
+        it "Se cumplen todas las invariantes, precondiciones y postcondiciones"do
+            pila = Pila.new(3)
+
+            # Invariante: capacidad no negativa
+            expect(pila.capacity).to be >= 0
+
+            # Post de initialize: pila vacía
+            expect(pila.empty?).to be true
+            expect(pila.height).to eq(0)
+            expect(pila.full?).to be false
+
+            # Push 1
+            pila.push("a")
+            expect(pila.height).to eq(1)          # post: height > 0
+            expect(pila.top).to eq("a")
+            expect(pila.empty?).to be false
+            expect(pila.full?).to be false
+
+            # Push 2
+            pila.push("b")
+            expect(pila.height).to eq(2)
+            expect(pila.top).to eq("b")
+            expect(pila.full?).to be false
+
+            # Push 3
+            pila.push("c")
+            expect(pila.height).to eq(3)
+            expect(pila.top).to eq("c")
+            expect(pila.full?).to be true         # full? == true al llegar a capacidad
+
+            # Pop 1
+            expect(pila.pop).to eq("c")
+            expect(pila.height).to eq(2)
+            expect(pila.top).to eq("b")
+            expect(pila.full?).to be false
+
+            # Pop 2
+            expect(pila.pop).to eq("b")
+            expect(pila.height).to eq(1)
+            expect(pila.top).to eq("a")
+
+            # Pop 3
+            expect(pila.pop).to eq("a")
+            expect(pila.height).to eq(0)
+            expect(pila.empty?).to be true
         end
     end
 end

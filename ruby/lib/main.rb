@@ -1,13 +1,3 @@
-require_relative 'before_and_after'
-#require_relative 'invariant'
-#require_relative 'pre_and_post'
-
-class Class
-    include BeforeAndAfterEach
-    #include Invariant
-    #include PreAndPost
-end
-
 =begin
 # Clase de Prueba de Before y After
 class MiClase

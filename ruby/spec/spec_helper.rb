@@ -3,12 +3,11 @@ require_relative '../lib/contrato'
 
 # Clase de Prueba de Before y After
 class MiClase
-
   before_and_after_each_call(
-    # Bloque Before. Se ejecuta antes de cada mensaje
-    proc { puts "Entré a un mensaje" },
-    # Bloque After. Se ejecuta después de cada mensaje
-    proc { puts "Salí de un mensaje" }
+      # Bloque Before. Se ejecuta antes de cada mensaje
+      proc { puts "Entré a un mensaje" },
+      # Bloque After. Se ejecuta después de cada mensaje
+      proc { puts "Salí de un mensaje" }
   )
 
   def mensaje_1
@@ -23,7 +22,7 @@ class MiClase
 
 end
 
-# Clase de Prueba de Invariants
+# Clase de prueba para invariantes
 class Guerrero
   attr_accessor :vida, :fuerza
 
