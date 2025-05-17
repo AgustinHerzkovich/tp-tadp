@@ -43,8 +43,8 @@ class Class
     end
   end
 
-  def construir_contexto(nombre_metodo, resultado = nil, *args)
-    contexto = Object.new # Se crea el contexto que es un singleton object
+  def construir_contexto(instancia, nombre_metodo, resultado = nil, *args)
+    contexto = instancia.dup # Copiamos la instancia para mantener el contexto y añadirle singletons
     @parametros[nombre_metodo].each_with_index do |parametro, indice| # Por cada uno de los parámetros
       contexto.define_singleton_method(parametro) {args[indice]} # Se crea un singleton method en el objeto, el cual devuelve el valor que se pasó como argumento
     end
@@ -53,7 +53,7 @@ class Class
       contexto.define_singleton_method(:resultado) {resultado} # Se crea un singleton method, que retorna ese resultado
     end
 
-    contexto
+    contexto # Retornamos el contexto
   end
 
   public
@@ -74,13 +74,36 @@ class Class
     if @precondicion || @postcondicion
       @parametros ||= {} # Si no existe, creo un hash del tipo metodo => parámetros
       @parametros[method_name] = instance_method(method_name).parameters.map(&:last) # Almacenamos los nombres de los parametros del metodo
+    end
 
-      before_and_after_each_call(@precondicion, nil)
-      before_and_after_each_call(nil, @postcondicion)
+    if @precondicion
+      pre = @precondicion # Me lo guardo en una variable local el proc, porque despues se resetea la variable
+      proc_precondicion = proc do |instancia, metodo, resultado, *args|
+        if metodo == method_name # Si el metodo actual es el de la precondicion
+          contexto = construir_contexto(instancia, metodo, resultado, *args) # Duplicamos la instancia y le añadimos metodos para usar los params
+          unless contexto.instance_exec(&pre)
+            raise "Excepcion: El objeto #{instancia} no cumplio su precondicion"
+          end
+        end
+      end
 
+      before_and_after_each_call(proc_precondicion, nil)
       @precondicion = nil # Resetea la variable
-      @postcondicion = nil # Resetea la variable
+    end
 
+    if @postcondicion
+      post = @postcondicion # Me lo guardo en una variable local el proc, porque despues se resetea la variable
+      proc_postcondicion = proc do |instancia, metodo, resultado, *args| # Ponemos resultado aunque no se use por postcondicion
+        if metodo == method_name # Si el metodo actual es el de la precondicion
+          contexto = construir_contexto(instancia, metodo, resultado, *args) # duplicamos la instancia y le añadimos metodos para usar los params
+          unless contexto.instance_exec(resultado, &post)
+            raise "Excepcion: El objeto #{instancia} no cumplio su postcondicion"
+          end
+        end
+      end
+
+      before_and_after_each_call(nil, proc_postcondicion)
+      @postcondicion = nil # Resetea la variable
     end
 
     if @before_procs.nil?  # Por otro lado, no hago nada si no se hizo before_and_after_each_call (@before_procs será nil)
@@ -109,30 +132,10 @@ class Class
   end
 
   def pre(&precondicion)
-    proc_precondicion = proc do |instancia, metodo, resultado, *args| # Ponemos resultado aunque no se use por postcondicion
-      if metodo == @ultimo_metodo_con_precondicion || @ultimo_metodo_con_precondicion == nil # Vemos el nombre del ultimo metodo agregado con precondicion
-        @ultimo_metodo_con_precondicion = metodo # Seteamos el nombre del metodo que se llamo
-        contexto = construir_contexto(metodo, resultado, *args)
-        unless contexto.instance_exec(&precondicion)
-          raise "Excepcion: El objeto #{instancia} no cumplio su precondicion"
-        end
-      end
-    end
-
-    @precondicion = proc_precondicion
+    @precondicion = precondicion
   end
 
   def post(&postcondicion)
-    proc_postcondicion = proc do |instancia, metodo, resultado, *args|
-      if metodo == @ultimo_metodo_con_postcondicion || @ultimo_metodo_con_postcondicion == nil # Vemos el nombre del ultimo metodo agregado con postcondicion
-        @ultimo_metodo_con_postcondicion = metodo # Seteamos el nombre del metodo que se llamo
-        contexto = construir_contexto(metodo, resultado, *args)
-        unless contexto.instance_exec(resultado, &postcondicion)
-          raise "Excepcion: El objeto #{instancia} no cumplio su postcondicion"
-        end
-      end
-    end
-
-    @postcondicion = proc_postcondicion
+    @postcondicion = postcondicion
   end
 end

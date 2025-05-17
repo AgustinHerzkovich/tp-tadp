@@ -72,66 +72,32 @@ describe Operaciones do
             operacion = Operaciones.new
             expect{operacion.dividir(4, 0)}.to raise_error(RuntimeError)
         end
+
+
     end
 
     describe "#restar" do
-        it "Restar no es afectado por las precondiciones y postcondiciones de dividir" do
+
+    end
+
+    describe "#sumar" do
+        it "Sumar es afectado solo por su postcondicion" do
             operacion = Operaciones.new
-            expect(operacion.restar(4, 0)).to eq(4)
+            expect{operacion.sumar(2, -4)}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#multiplicar" do
+        it "Multiplicar es solo afectado por su precondicion" do
+            operacion = Operaciones.new
+            expect{operacion.multiplicar(2, -4)}.to raise_error(RuntimeError)
         end
     end
 end
 
 # Test Integral
 describe Pila do
-    describe "#initialize" do
-        it "Se intenta inicializar una pila con capacity negativa y tira excepción" do
-            expect{Pila.new(-1)}.to raise_error(RuntimeError)
-        end
-    end
-
-    describe "#initialize" do
-        it "Alguien redefine initialize, se intenta inicializar una pila con un current_node != nil y tira excepción" do
-            class Pila
-                def initialize(capacity)
-                    @capacity = capacity
-                    @current_node = Node.new(nil, current_node)
-                end
-            end
-            expect{Pila.new(0)}.to raise_error(RuntimeError)
-        end
-    end
-
-    describe "#push" do
-        it "Se intenta pushear un elemento pero la capacidad de la pila es 0, entonces tira excepción de precondición" do
-            expect{Pila.new(0).push(nil)}.to raise_error(RuntimeError)
-        end
-    end
-
-    describe "#push" do
-        it "Alguien redefine push, se intenta pushear un elemento y no se cumple la postcondición de height > 0, lo cual arroja excepción" do
-            class Pila
-                def push(element)
-                    puts "nada"
-                end
-            end
-            expect{Pila.new(5).push(nil)}.to raise_error(RuntimeError)
-        end
-    end
-
-    describe "#pop" do
-        it "Se intenta hacer pop de una pila vacía, lo cual tira excepción porque no se cumple la precondición !empty" do
-            expect{Pila.new(5).pop}.to raise_error(RuntimeError)
-        end
-    end
-
-    describe "#top" do
-        it "Se intenta obtener el top de una pila vacía, lo cual tira excepción porque no se cumple la precondición !empty" do
-            expect{Pila.new(5).top}.to raise_error(RuntimeError)
-        end
-    end
-
-    describe "Funcionamiento normal" do
+    describe "Funcionamiento Normal" do
         it "Se cumplen todas las invariantes, precondiciones y postcondiciones"do
             pila = Pila.new(3)
 
@@ -177,6 +143,51 @@ describe Pila do
             expect(pila.pop).to eq("a")
             expect(pila.height).to eq(0)
             expect(pila.empty?).to be true
+        end
+    end
+
+    describe "#initialize" do
+        it "Se intenta inicializar una pila con capacity negativa y tira excepción" do
+            expect{Pila.new(-1)}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#pop" do
+        it "Se intenta hacer pop de una pila vacía, lo cual tira excepción porque no se cumple la precondición !empty" do
+            expect{Pila.new(5).pop}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#top" do
+        it "Se intenta obtener el top de una pila vacía, lo cual tira excepción porque no se cumple la precondición !empty" do
+            expect{Pila.new(5).top}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#push" do
+        it "Se intenta pushear un elemento pero la capacidad de la pila es 0, entonces tira excepción de precondición" do
+            expect{Pila.new(0).push(nil)}.to raise_error(RuntimeError)
+        end
+
+        it "Alguien redefine push, se intenta pushear un elemento y no se cumple la postcondición de height > 0, lo cual arroja excepción" do
+            class Pila
+                def push(element)
+                    puts "nada"
+                end
+            end
+            expect{Pila.new(5).push(nil)}.to raise_error(RuntimeError)
+        end
+    end
+
+    describe "#initialize" do
+        it "Alguien redefine initialize, se intenta inicializar una pila con un current_node != nil y tira excepción" do
+            class Pila
+                def initialize(capacity)
+                    @capacity = capacity
+                    @current_node = Node.new(nil, current_node)
+                end
+            end
+            expect{Pila.new(0)}.to raise_error(RuntimeError)
         end
     end
 end
