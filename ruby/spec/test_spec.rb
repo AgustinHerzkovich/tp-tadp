@@ -69,3 +69,18 @@ describe Guerrero do
         end
     end
 end
+
+# Test Pre and Post
+describe Operaciones do
+    describe "#dividir" do
+        it "Se divide 4 por 2 correctamente" do
+            expect(Operaciones.new.dividir(4, 2)).to eq(2)
+        end
+    end
+
+    describe "#dividir" do
+        it "Se intenta dividir 4 por 0 y se lanza una excepción por precondición no cumplida" do
+            expect{Operaciones.new.dividir(4, 0)}.to raise_error(RuntimeError)
+        end
+    end
+end

@@ -1,9 +1,11 @@
-class Class
-  attr_reader :before_procs, :after_procs # Defino getters para poder acceder en el define_method de method_added
+# DECISIÓN DE DISEÑO: Se van a redefinir todos los métodos que el usuario defina (ej: si quiere redefinir initialize, debe redefinirlo él)
 
-  private # Ponemos privado el metodo para que nadie de afuera pueda redefinir los metodos
+class Class
+  attr_reader :before_procs, :after_procs # Defimos getters para poder acceder en el define_method
+
+  private # Ponemos privados los metodos auxiliares para que nadie de afuera pueda redefinir los metodos
   def redefinir_metodo(method_name)
-    @avoid_recursion = true
+    @avoid_recursion = true # Evito recursión infinita ya que define_method llama a method_added
 
     metodo_original = instance_method(method_name) # Obtengo el metodo original (unbound method)
     define_method(method_name) do |*args, &block|
@@ -20,39 +22,38 @@ class Class
     @avoid_recursion = false
   end
 
-  #def inherited(padre) # TODO: Verificar que funcione esto para invariante
-  #  if padre == Class
-  #    redefinir_metodos_existentes
-  #  end
-  #end
-
   def redefinir_metodos_existentes
-    if @metodos_existentes_redefinidos.nil? # TODO: RARO
-      # Ponerle los bloques a los metodos ya existentes (definidos antes del invariant)
-      metodos_a_modificar = instance_methods(false)
-      metodos_a_modificar << :initialize # Agregamos initialize dado que este no se encuentra en los metodos de instancia de la clase
+    # Ponerle los bloques a los metodos ya existentes (definidos antes del invariant)
+    if @metodos_existentes_redefinidos.nil? # SI YA SE REDIFINIERON, NO HACE FALTA REHACERLO!
+
+      metodos_publicos_definidos = instance_methods(true).filter { |metodo| method_defined?(metodo,false) }
+      metodos_privados_definidos = private_instance_methods(true).filter { |metodo| private_method_defined?(metodo, false) }
+      metodos_a_modificar =  metodos_publicos_definidos + metodos_privados_definidos
+
       metodos_a_modificar.each do |method_name|
         # Por cada simbolo
         redefinir_metodo(method_name)
       end
       @metodos_existentes_redefinidos = true
     end
-
   end
+
   public
   def before_and_after_each_call(before_proc, after_proc)
+    # Lazy initialization
     @before_procs ||= []
     @after_procs ||= []
-    # Añado los procs al final de las listas
+    # Añado los procs al final de las listas (a no ser que se pase nil)
     @before_procs << before_proc if before_proc
     @after_procs << after_proc if after_proc
+
     redefinir_metodos_existentes
   end
 
   def method_added(method_name)
     return if @avoid_recursion # Evito recursión infinita ya que define_method llama a method_added
 
-    if @before_procs == nil && @after_procs == nil  # Por otro lado, no hago nada si no se puso before_and_after_each_call (@before_procs será nil)
+    if @before_procs.nil?  # Por otro lado, no hago nada si no se puso before_and_after_each_call (@before_procs será nil)
       super # Solo llamo a super por si hay otra redefinicion de method_added
       return
     end
