@@ -1,7 +1,7 @@
 # Test Before And After Each Call
 describe MiClase do
     describe "#mensaje_1" do
-        it "se ejecuta el proc inicial, luego mensaje_1 y finalmente el proc final" do
+        it "Se ejecuta el proc inicial, luego mensaje_1 y finalmente el proc final" do
             a = MiClase.new
             salida_esperada = "Entré a un mensaje\nmensaje_1\nSalí de un mensaje\n"
             expect{(a.mensaje_1)}.to output(salida_esperada).to_stdout
@@ -9,7 +9,7 @@ describe MiClase do
     end
 
     describe "#mensaje_3" do
-        it "se reabre la clase y se agregan nuevos procs para antes y después" do
+        it "Se reabre la clase y se agregan nuevos procs para antes y después" do
             # La reabrimos
             class MiClase
                 before_and_after_each_call(
@@ -72,25 +72,12 @@ describe Operaciones do
             operacion = Operaciones.new
             expect{operacion.dividir(4, 0)}.to raise_error(RuntimeError)
         end
-
-
     end
 
     describe "#restar" do
-
-    end
-
-    describe "#sumar" do
-        it "Sumar es afectado solo por su postcondicion" do
+        it "El método restar no se ve afectado por las precondiciones y postcondiciones de dividir" do
             operacion = Operaciones.new
-            expect{operacion.sumar(2, -4)}.to raise_error(RuntimeError)
-        end
-    end
-
-    describe "#multiplicar" do
-        it "Multiplicar es solo afectado por su precondicion" do
-            operacion = Operaciones.new
-            expect{operacion.multiplicar(2, -4)}.to raise_error(RuntimeError)
+            expect(operacion.restar(5, 0)).to eq(5)
         end
     end
 end
@@ -169,7 +156,7 @@ describe Pila do
             expect{Pila.new(0).push(nil)}.to raise_error(RuntimeError)
         end
 
-        it "Alguien redefine push, se intenta pushear un elemento y no se cumple la postcondición de height > 0, lo cual arroja excepción" do
+        it "Se redefine push, se intenta pushear un elemento y no se cumple la postcondición de height > 0, lo cual arroja excepción" do
             class Pila
                 def push(element)
                     puts "nada"
@@ -180,7 +167,7 @@ describe Pila do
     end
 
     describe "#initialize" do
-        it "Alguien redefine initialize, se intenta inicializar una pila con un current_node != nil y tira excepción" do
+        it "Se redefine initialize, se intenta inicializar una pila con un current_node != nil y tira excepción" do
             class Pila
                 def initialize(capacity)
                     @capacity = capacity

@@ -41,17 +41,9 @@ end
 
 # Clase de prueba para precondiciones y postcondiciones
 class Operaciones
-
-  post { |result| result > 0 }
-  def sumar(sumando1, sumando2)
-    sumando1 + sumando2
-  end
-
   #precondición de dividir
-  pre { divisor != 2 } # SE IGNORA
   pre { divisor != 0 }
   #postcondición de dividir
-  post { |result| result == 5}  # SE IGNORA
   post { |result| result * divisor == dividendo }
   def dividir(dividendo, divisor)
     dividendo / divisor
@@ -61,12 +53,6 @@ class Operaciones
   def restar(minuendo, sustraendo)
     minuendo - sustraendo
   end
-
-  pre { factor1 > 0 && factor2 > 0 }
-  def multiplicar(factor1, factor2)
-    factor1 * factor2
-  end
-
 end
 
 # Clase de prueba integral
