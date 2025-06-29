@@ -1,9 +1,9 @@
 package entidades.requisitos
 
-import entidades.competidores.Competidor
+import entidades.participantes.Individuo
 
 class RequisitoCargaMinima(cargaMinima : Double) extends Requisito {
 
-  override def apply(competidor: Competidor): Boolean = competidor.cargaMaxima >= cargaMinima
+  override def apply(individuo: Individuo): Boolean = individuo.cargaMaxima >= cargaMinima
 
 }

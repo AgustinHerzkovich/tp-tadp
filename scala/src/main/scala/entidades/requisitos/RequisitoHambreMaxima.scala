@@ -1,8 +1,8 @@
 package entidades.requisitos
 
-import entidades.competidores.Competidor
+import entidades.participantes.Individuo
 
 class RequisitoHambreMaxima(val hambreMaxima: Double) extends Requisito{
-  override def apply(competidor: Competidor): Boolean = competidor.porcentajeHambre <= hambreMaxima
-  // competidor.tieneHambreSuficiente
+  override def apply(individuo: Individuo): Boolean = individuo.porcentajeHambre <= hambreMaxima
+  // individuo.tieneHambreSuficiente
 }

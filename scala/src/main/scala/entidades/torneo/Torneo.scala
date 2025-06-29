@@ -1,6 +1,6 @@
 package entidades.torneo
 
-import entidades.competidores.Vikingo
+import entidades.participantes.Vikingo
 import entidades.dragones.Dragon
 import entidades.torneo.postas.Posta
 import entidades.torneo.reglas.Regla
@@ -12,6 +12,7 @@ class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) 
     realizarRonda(vikingosQueParticipan, postas, dragonesDisponibles)
   }
 
+  // TODO: Pasar esto a Fold
   private def realizarRonda(vikingos : List[Vikingo], postas : List[Posta], dragonesDiponibles : List[Dragon]): Option[Vikingo] = (vikingos, postas) match {
     case (Nil, _) => Option() // Esta mal pattern matchear asi igual
     case (vikingo :: Nil, _)  => Option(vikingo)
@@ -23,4 +24,16 @@ class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) 
       realizarRonda(vikingosQuePasan, siguientes, dragonesDiponibles)
     }
   }
+/* otra opcion
+  private def realizarRonda(vikingos: List[Vikingo], postas: List[Posta], dragonesDiponibles: List[Dragon]): Option[Vikingo] = {
+    if (vikingos.isEmpty) Option()
+    else if (vikingos.size == 1 || postas.isEmpty) Option(regla.quienGana(vikingos))
+    else  {
+      val vikingosOrdenadosParaMontar = regla.ordenDeMonturas(vikingos)
+      val vikingosDespuesDe = postas.head(vikingosOrdenadosParaMontar, dragonesDisponibles)
+      val vikingosQuePasan = regla.quienesPasanDeRonda(vikingosDespuesDe)
+      realizarRonda(vikingosQuePasan, postas.tail, dragonesDisponibles)
+      }
+    }
+ */
 }

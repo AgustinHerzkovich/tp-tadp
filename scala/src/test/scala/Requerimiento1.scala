@@ -1,4 +1,4 @@
-import entidades.competidores.{Jinete, Vikingo}
+import entidades.participantes.{Jinete, Vikingo}
 import entidades.dragones.{Dragon, FuriaNocturna, Gronckle}
 import entidades.items.{Arma, Item}
 import org.scalatest.flatspec.AnyFlatSpec

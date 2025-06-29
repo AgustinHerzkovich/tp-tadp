@@ -1,10 +1,10 @@
 package entidades.requisitos
 
-import entidades.competidores.Competidor
+import entidades.participantes.Individuo
 
 trait Requisito {
 
-  def apply(competidor: Competidor) : Boolean
+  def apply(individuo: Individuo) : Boolean
 
 }
 

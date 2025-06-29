@@ -1,4 +1,4 @@
-import entidades.competidores.{Competidor, Vikingo}
+import entidades.participantes.{Individuo, Vikingo}
 import entidades.dragones.{Dragon, FuriaNocturna, Gronckle}
 import entidades.requisitos.{RequisitoCargaMinima, RequisitoItem}
 import org.scalatest.flatspec.AnyFlatSpec
@@ -38,7 +38,7 @@ class Requerimiento2 extends AnyFlatSpec {
   }
 
   "varios participantes participan de una posta" should "como resultado quedan solo dos participantes de los 3 que participaron inicialmente" in {
-    val ganadoresPosta: List[Competidor] = combate.realizarse(listaVikingos, listaDragones)
+    val ganadoresPosta: List[Individuo] = combate.realizarse(listaVikingos, listaDragones)
     ganadoresPosta.length shouldBe 2
     ganadoresPosta shouldBe ganadoresPosta.sortWith((g1, g2) => g1.esMejorQue(g2)(combate))
     ganadoresPosta.head.porcentajeHambre shouldBe (25.0 +- 0.0001)

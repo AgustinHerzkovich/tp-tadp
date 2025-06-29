@@ -4,31 +4,31 @@ package entidades.requisitos
 
 //TODO: consultar esta version
 /*
-import competidores.Competidor
+import individuoes.individuo
 import items.Item
 
-type Requisito = Competidor => Boolean
+type Requisito = individuo => Boolean
 
 object RequisitoImpl{
 
   def porBarbarosidad(minimo : Double): Requisito = {
-    (competidor: Competidor) => competidor.barbarosidad >= minimo
+    (individuo: individuo) => individuo.barbarosidad >= minimo
   }
 
   def porItem (item : Option[Item]) : Requisito = {
-    (competidor: Competidor) => competidor.arma == item
+    (individuo: individuo) => individuo.arma == item
   }
 
   def porDanioMaximo(danio : Double) : Requisito ={
-    (competidor : Competidor) => competidor.danio <= danio
+    (individuo : individuo) => individuo.danio <= danio
   }
 
   def porPesoMaximo(peso: Double): Requisito = {
-    (competidor: Competidor) => competidor.peso <= peso
+    (individuo: individuo) => individuo.peso <= peso
   }
 
   def porPesoMinimoDePesca(pesoMinimo: Double): Requisito = {
-    (competidor: Competidor) => competidor.cargaMaxima >= pesoMinimo
+    (individuo: individuo) => individuo.cargaMaxima >= pesoMinimo
   }
 
 }
@@ -38,8 +38,8 @@ trait MonturaConRequisitos {
   //Podria no instanciarle nada a esto y que sea un trait que se use en las clases que lo necesiten
   def requisitosExtras : List[Requisito] = List()
 
-  def puedeSerMontadoPor(competidor: Competidor): Boolean = {
-    requisitosExtras.forall(requisito => requisito(competidor))
+  def puedeSerMontadoPor(individuo: individuo): Boolean = {
+    requisitosExtras.forall(requisito => requisito(individuo))
   }
 
 }
@@ -48,12 +48,12 @@ trait PostaConRequisitos {
 
   def requisitosExtras: List[Requisito] = List()
 
-  def puedeParticipar(competidor: Competidor): Boolean = {
-    requisitosExtras.forall(requisito => requisito(competidor))
+  def puedeParticipar(individuo: individuo): Boolean = {
+    requisitosExtras.forall(requisito => requisito(individuo))
   }
 
-  // def atravesar(competidores: List[Competidor]): List[Competidor] = {
-  // competidores.filter(puedeParticipar)
+  // def atravesar(individuoes: List[individuo]): List[individuo] = {
+  // individuoes.filter(puedeParticipar)
   //}
 
 }

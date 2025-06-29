@@ -1,6 +1,6 @@
   package entidades.torneo.postas
 
-  import entidades.competidores.Competidor
+  import entidades.participantes.Individuo
   import entidades.requisitos.obj.NoRequisito
   import entidades.requisitos.{Requisito, RequisitoMontura}
 

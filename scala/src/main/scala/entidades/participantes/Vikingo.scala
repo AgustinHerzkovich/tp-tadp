@@ -1,4 +1,4 @@
-package entidades.competidores
+package entidades.participantes
 
 import entidades.dragones.Dragon
 import entidades.items.Item
@@ -12,11 +12,10 @@ case class Vikingo(
     peso : Double,
     barbarosidad: Double,
     porcentajeHambre: Double, // tiene sentido que este en el constructor?
-    item : Option[Item] = None
-  ) extends Competidor {
-
-  val porcentajeHambreMaximo = 100
-
+    item : Option[Item] = None,
+    porcentajeHambreMaximo: Double = 100.0
+  ) extends Individuo {
+  
   override def danio : Double = {
     this.barbarosidad + this.item.map(x =>x.danioItem).getOrElse(0.0)
   }
@@ -35,6 +34,6 @@ case class Vikingo(
       Try(Jinete(vikingo = this, dragon = dragon))
   }
 
-  def puedeSeguir(): Boolean = porcentajeHambre <= porcentajeHambreMaximo
+  def estaHambriento(): Boolean = porcentajeHambre <= porcentajeHambreMaximo
 
 }

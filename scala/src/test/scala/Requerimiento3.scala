@@ -1,4 +1,4 @@
-import entidades.competidores.{Jinete, Competidor, Vikingo}
+import entidades.participantes.{Jinete, Individuo, Vikingo}
 import entidades.dragones.{FuriaNocturna, Gronckle, NadderMortifero}
 import entidades.items.Arma
 import entidades.torneo.postas.Pesca
@@ -24,14 +24,14 @@ class Requerimiento3 extends AnyFlatSpec {
   }
 
   "vikingo no se jinetea porque es mejor" should "vikingo puede montar a algún dragón, pero a pesar de eso le conviene estar solo" in {
-    val vikingo1: Competidor = posta.armarCompetidor(vikingo, List(dragon3, dragon2))
+    val vikingo1: Individuo = posta.armarCompetidor(vikingo, List(dragon3, dragon2))
     vikingo1 shouldBe a [Vikingo]
     vikingo1 shouldBe vikingo
     dragon2.puedeSerMontado(vikingo1.asInstanceOf[Vikingo]) shouldBe true
   }
 
   "vikingo no se jinetea porque no puede montar" should "vikingo no puede montar a ningún dragón, entonces su única opción es competir solo" in {
-    val vikingo1: Competidor = posta.armarCompetidor(vikingo, List(dragon3))
+    val vikingo1: Individuo = posta.armarCompetidor(vikingo, List(dragon3))
     vikingo1 shouldBe a [Vikingo]
     dragon3.puedeSerMontado(vikingo1.asInstanceOf[Vikingo]) shouldBe false
   }

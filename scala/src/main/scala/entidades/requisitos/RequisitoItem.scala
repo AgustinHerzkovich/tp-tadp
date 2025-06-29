@@ -1,10 +1,10 @@
 package entidades.requisitos
 
-import entidades.competidores.Competidor
+import entidades.participantes.Individuo
 import entidades.items.Item
 
 class RequisitoItem(itemRequerido : Item) extends Requisito {
 
-  override def apply(competidor: Competidor): Boolean = competidor.item == itemRequerido
+  override def apply(individuo: Individuo): Boolean = individuo.item == itemRequerido
   
 }

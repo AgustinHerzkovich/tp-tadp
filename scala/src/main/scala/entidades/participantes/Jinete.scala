@@ -1,10 +1,10 @@
-package entidades.competidores
+package entidades.participantes
 
 import entidades.dragones.Dragon
 import entidades.items.Item
 
 //JINETE//
- case class Jinete(vikingo: Vikingo, dragon: Dragon) extends Competidor {
+ case class Jinete(vikingo: Vikingo, dragon: Dragon) extends Individuo {
 
   require(dragon.puedeSerMontado(vikingo))
 
@@ -26,7 +26,7 @@ import entidades.items.Item
 
   override def disminuirHambre(porcentaje: Double): Jinete = this.copy(vikingo = vikingo.disminuirHambre(porcentaje))
   
-  override def puedeSeguir(): Boolean = vikingo.puedeSeguir()
+  override def estaHambriento(): Boolean = vikingo.estaHambriento()
 
 }
 

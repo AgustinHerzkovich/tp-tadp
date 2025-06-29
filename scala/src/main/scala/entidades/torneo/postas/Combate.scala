@@ -1,6 +1,6 @@
 package entidades.torneo.postas
 
-import entidades.competidores.Competidor
+import entidades.participantes.Individuo
 import entidades.requisitos.{Requisito, RequisitoBarbarosidad, RequisitoItem}
 
 case class Combate(override val hambreQueGenera: Double, override val requisitoDeParticipacion : Requisito) extends Posta {

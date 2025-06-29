@@ -1,6 +1,6 @@
 package entidades.dragones
 
-import entidades.competidores.Vikingo
+import entidades.participantes.Vikingo
 import entidades.requisitos.{Requisito, RequisitoPesoMaximo}
 
 abstract class Dragon(val peso: Double, val requisitosExtra: List[Requisito], val danio: Double, val velocidadBase: Double = 60) {

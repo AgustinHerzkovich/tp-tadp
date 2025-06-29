@@ -1,4 +1,4 @@
-import entidades.competidores.Vikingo
+import entidades.participantes.Vikingo
 import entidades.dragones.*
 import entidades.requisitos.{RequisitoCargaMinima, RequisitoItem}
 import entidades.torneo.reglas.{Regla, ReglaEstandar}

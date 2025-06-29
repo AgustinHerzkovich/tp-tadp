@@ -1,6 +1,6 @@
 package entidades.items
 
-import entidades.competidores.{Competidor, Vikingo}
+import entidades.participantes.{Individuo, Vikingo}
 
 class Comestible(hambreDisminuible: Double) extends Item {
 

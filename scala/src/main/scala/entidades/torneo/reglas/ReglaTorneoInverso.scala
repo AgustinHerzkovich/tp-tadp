@@ -1,6 +1,6 @@
 package entidades.torneo.reglas
 
-import entidades.competidores.Vikingo
+import entidades.participantes.Vikingo
 
 class ReglaTorneoInverso extends ReglaEstandar {
   override def quienesPasanDeRonda(vikingos: List[Vikingo]): List[Vikingo] = vikingos.drop(vikingos.length / 2)
