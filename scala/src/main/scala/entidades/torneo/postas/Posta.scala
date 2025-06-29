@@ -4,35 +4,31 @@ import entidades.competidores.{Competidor, Jinete, Vikingo}
 import entidades.dragones.Dragon
 import entidades.requisitos.{Requisito, RequisitoHambreMaxima}
 
-//TODO : VER SI PODRIA SER CON MIXIN
-abstract class Posta(val hambreQueGenera: Double/*, val requisitoPost: RequisitoHambreMaxima = new RequisitoHambreMaxima(hambreMaxima = 100)*/) {
+abstract class Posta {
 
-  def hacerParticipar(competidor: Competidor): Competidor = competidor.aumentarHambre(hambreQueGenera) // EL COPY SE HACE ADENTRO DE AUMENTARAMBREEEE
+  protected def hambreQueGenera(): Double
 
-  def puedeParticipar(competidor: Competidor): Boolean =
-    cumplePre(competidor) && cumplePost(hacerParticipar(competidor))
+  protected def requisitoDeParticipacion(): Requisito
+  
+  protected def hacerParticipar(competidor: Competidor): Competidor = competidor.aumentarHambre(hambreQueGenera())
 
-  def cumplePre(competidor: Competidor): Boolean // Abstracto
+  protected def puedeParticipar(competidor: Competidor): Boolean = requisitoDeParticipacion()(competidor) && hacerParticipar(competidor).puedeSeguir()
 
-  //def cumplePost(competidor: Competidor): Boolean = requisitoPost.cumple(competidor)
-  def cumplePost(competidor: Competidor): Boolean = competidor.puedeSeguir()
+  protected def obtenerVikingos(competidores: List[Competidor]): List[Vikingo] = competidores.map(competidor => obtenerVikingo(competidor))
 
-  def obtenerVikingos(competidores: List[Competidor]): List[Vikingo] = competidores.map(competidor => obtenerVikingo(competidor))
-
-  def obtenerVikingo(competidor: Competidor): Vikingo = competidor match {
+  protected def obtenerVikingo(competidor: Competidor): Vikingo = competidor match {
     case competidor: Jinete => competidor.vikingo // Desmontar
     case competidor: Vikingo => competidor
   }
 
-  def realizarse(vikingos: List[Vikingo], dragones: List[Dragon]): List[Vikingo] = {
+  def apply(vikingos: List[Vikingo], dragones: List[Dragon]): List[Vikingo] = {
     var competidores: List[Competidor] = armarCompetidores(vikingos, dragones)
     competidores = participantesOrdenados(competidores)
     obtenerVikingos(competidores).map(vikingo => vikingo.postParticipar()) // Acciones que se realizan luego de participar
   }
 
-
-  def armarCompetidores(vikingos: List[Vikingo], dragonesDisponibles: List[Dragon]): List[Competidor] = (vikingos, dragonesDisponibles) match{
-    case (Nil, _) => Nil
+  protected def armarCompetidores(vikingos: List[Vikingo], dragonesDisponibles: List[Dragon]): List[Competidor] = (vikingos, dragonesDisponibles) match{
+    case (Nil, _) => Nil // Esa mal
     case (vikingos, Nil) => vikingos
     case (vikingo :: demasVikingos, dragonesDisponibles) => {
       val competidor = armarCompetidor(vikingo, dragonesDisponibles)
@@ -44,15 +40,14 @@ abstract class Posta(val hambreQueGenera: Double/*, val requisitoPost: Requisito
     }
   }
 
-  def armarCompetidor(vikingo: Vikingo, dragones: List[Dragon]): Competidor = {
+  protected def armarCompetidor(vikingo: Vikingo, dragones: List[Dragon]): Competidor = {
     val opciones: List[Competidor] = vikingo :: dragones.map(d => vikingo.montar(d).getOrElse({vikingo})) // si no puede montar el dragon, vuelve a figurar como él solo
     participantesOrdenados(opciones).filter(puedeParticipar).head
   }
 
-  def participantesOrdenados(competidores: List[Competidor]) : List[Competidor] = {
+  protected def participantesOrdenados(competidores: List[Competidor]) : List[Competidor] = {
     competidores.sortWith((c1, c2) => c1.esMejorQue(c2)(this)) // ACA PASAMOS LISTA DE COMPETIDORES AL TORNEO PARA QUE LUEGO LA REGLA FILTRE EVERYTHING
   }
-
 }
 
 

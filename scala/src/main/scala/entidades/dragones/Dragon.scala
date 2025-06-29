@@ -13,6 +13,6 @@ abstract class Dragon(val peso: Double, val requisitosExtra: List[Requisito], va
     peso * 0.2
   }
 
-  def puedeSerMontado(vikingo : Vikingo): Boolean = requisitos.forall(r => r.cumple(vikingo))
+  def puedeSerMontado(vikingo : Vikingo): Boolean = requisitos.forall(r => r.apply(vikingo))
 
 }

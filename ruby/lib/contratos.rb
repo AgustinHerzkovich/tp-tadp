@@ -2,10 +2,6 @@
 # DECISIÓN DE DISEÑO: Si se definen varias precondiciones y/o postcondiciones para un mismo metodo, sólo se tiene en cuenta la última
 # DECISIÓN DE DISEÑO: No se puede poner efecto en las precondiciones y/o postcondiciones, porque puede en algunos casos modificar el objeto original (ej: modificar lista)
 
-class Class
-  include Contratos
-end
-
 module Contratos
   attr_reader :before_procs, :after_procs # Defimos getters de los procs para poder acceder en el define_method
   
@@ -135,9 +131,11 @@ module Contratos
       contexto.define_singleton_method(parametro) {args[indice]} # Se crea un singleton method en el objeto, el cual devuelve el valor que se pasó como argumento
     end
     
-    contexto.define_singleton_method(:resultado) {resultado} # Se crea un singleton method, que retorna ese resultado
-    
     contexto # Retornamos el contexto
   end
 
+end
+
+class Class
+  include Contratos
 end

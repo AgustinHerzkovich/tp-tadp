@@ -4,7 +4,7 @@ import entidades.competidores.Competidor
 
 trait Requisito {
 
-  def cumple(competidor: Competidor) : Boolean
+  def apply(competidor: Competidor) : Boolean
 
 }
 

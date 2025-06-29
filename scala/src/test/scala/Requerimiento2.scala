@@ -10,12 +10,12 @@ import scala.language.postfixOps
 
 class Requerimiento2 extends AnyFlatSpec {
   val espada: Arma = new Arma(nombre = "espada suprema", danio = 1000)
-  val vikingo1: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 60, item = Some(espada))
-  val vikingoQueProduceMuchoDanio: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 20, item = Some(new Arma(nombre = "espada suprema", danio = 1000000)))
-  val vikingoQueProducePocoDanio: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 20, item = Some(new Arma(nombre = "espada suprema", danio = 1)))
-  val pesca: Pesca = new Pesca(hambreQueGenera = 5, preRequisito = Some(new RequisitoCargaMinima(cargaMinima = 500)))
-  val combate: Combate = new Combate(hambreQueGenera = 5, preRequisito = Right(new RequisitoItem(espada)))
-  val carrera: Carrera = new Carrera(hambreQueGenera = 50, None)
+  val vikingo1: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 60, item = Option(espada))
+  val vikingoQueProduceMuchoDanio: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 20, item = Option(new Arma(nombre = "espada suprema", danio = 1000000)))
+  val vikingoQueProducePocoDanio: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 20, item = Option(new Arma(nombre = "espada suprema", danio = 1)))
+  val pesca: Pesca = new Pesca(hambreQueGenera = 5, requisitoDeParticipacion = new RequisitoCargaMinima(cargaMinima = 500))
+  val combate: Combate = new Combate(hambreQueGenera = 5, requisitoDeParticipacion = new RequisitoItem(espada))
+  val carrera: Carrera = new Carrera(hambreQueGenera = 50, NoRequisito)
   val dragon1: Gronckle = new Gronckle(peso = 10, pesoMaximoVikingo = 100)
   val dragon2: Gronckle = new Gronckle(peso = 20, pesoMaximoVikingo = 100)
   val listaVikingos: List[Vikingo] = List(vikingo1, vikingoQueProduceMuchoDanio, vikingoQueProducePocoDanio)

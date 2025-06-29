@@ -8,11 +8,11 @@ import org.scalatest.matchers.should.Matchers.*
 import scala.language.postfixOps
 
 class Requerimiento3 extends AnyFlatSpec {
-  val vikingo: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 20, item = Some(new Arma(nombre = "espada suprema", danio = 100)))
+  val vikingo: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 20, item = Option(new Arma(nombre = "espada suprema", danio = 100)))
   val dragon1: FuriaNocturna = new FuriaNocturna(peso = 5000, danio = 1000)
   val dragon2: Gronckle = new Gronckle(peso = 5000, pesoMaximoVikingo = 500)
   val dragon3: NadderMortifero = new NadderMortifero(peso = 50)
-  val posta: Pesca = new Pesca(hambreQueGenera = 2, None)
+  val posta: Pesca = new Pesca(hambreQueGenera = 2, Option())
 
   "vikingo se jinetea" should "el vikingo puede montar a algún dragón, entonces se obtiene el jinete" in{
     posta.armarCompetidor(vikingo, List(dragon1, dragon2)) match {

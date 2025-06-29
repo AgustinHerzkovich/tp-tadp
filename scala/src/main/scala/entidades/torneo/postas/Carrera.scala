@@ -1,8 +1,9 @@
   package entidades.torneo.postas
 
   import entidades.competidores.Competidor
-  import entidades.requisitos.RequisitoMontura
+  import entidades.requisitos.obj.NoRequisito
+  import entidades.requisitos.{Requisito, RequisitoMontura}
 
-  case class Carrera(override val hambreQueGenera: Double, val preRequisito: Option[RequisitoMontura]) extends Posta(hambreQueGenera){
-    def cumplePre(competidor: Competidor): Boolean = preRequisito.forall(_.cumple(competidor))
+  case class Carrera(override val hambreQueGenera: Double, override val requisitoDeParticipacion: Requisito) extends Posta{
+    require(requisitoDeParticipacion().isInstanceOf[RequisitoMontura] || requisitoDeParticipacion() == NoRequisito)
   }

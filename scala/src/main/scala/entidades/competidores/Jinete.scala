@@ -6,6 +6,8 @@ import entidades.items.Item
 //JINETE//
  case class Jinete(vikingo: Vikingo, dragon: Dragon) extends Competidor {
 
+  require(dragon.puedeSerMontado(vikingo))
+
   override def peso: Double = dragon.peso + vikingo.peso
 
   override def barbarosidad: Double = vikingo.barbarosidad

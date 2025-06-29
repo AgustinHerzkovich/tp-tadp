@@ -5,6 +5,6 @@ import entidades.items.Item
 
 class RequisitoItem(itemRequerido : Item) extends Requisito {
 
-  override def cumple(competidor: Competidor): Boolean = competidor.item == itemRequerido
+  override def apply(competidor: Competidor): Boolean = competidor.item == itemRequerido
   
 }

@@ -32,10 +32,7 @@ case class Vikingo(
   def postParticipar(): Vikingo = this // Devuelve el vikingo sin cambios, luego Patapez overridea
 
   def montar(dragon: Dragon): Try[Jinete] = {
-    if (dragon.puedeSerMontado(this))
-      Success(Jinete(vikingo = this, dragon = dragon))
-    else
-      Failure(new Exception("No cumple los requisitos para montar al dragón"))
+      Try(Jinete(vikingo = this, dragon = dragon))
   }
 
   def puedeSeguir(): Boolean = porcentajeHambre <= porcentajeHambreMaximo

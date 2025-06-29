@@ -1,10 +1,9 @@
 package entidades.torneo.postas
 
-import entidades.requisitos.RequisitoCargaMinima
+import entidades.requisitos.{Requisito, RequisitoCargaMinima}
 import entidades.competidores.Competidor
+import entidades.requisitos.obj.NoRequisito
 
-case class Pesca(override val hambreQueGenera: Double, val preRequisito: Option[RequisitoCargaMinima]) extends Posta(hambreQueGenera){
-  override def cumplePre(competidor: Competidor): Boolean = {
-    preRequisito.forall(_.cumple(competidor))
-  }
+case class Pesca(override val hambreQueGenera: Double, override val requisitoDeParticipacion: Requisito) extends Posta(){
+  require(requisitoDeParticipacion().isInstanceOf[RequisitoCargaMinima] || requisitoDeParticipacion() == NoRequisito)
 }
