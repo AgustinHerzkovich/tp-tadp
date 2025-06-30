@@ -3,8 +3,8 @@ package entidades.requisitos
 import entidades.participantes.Individuo
 import entidades.items.Item
 
-class RequisitoItem(itemRequerido : Item) extends Requisito {
+class RequisitoItem(condicion: Item => Boolean) extends Requisito {
 
-  override def apply(individuo: Individuo): Boolean = individuo.item == itemRequerido
+  override def apply(individuo: Individuo): Boolean = individuo.item.exists(condicion)
   
 }
