@@ -20,14 +20,11 @@ import entidades.items.Item
 
   override def cargaMaxima: Double = dragon.cargaMaxima - vikingo.peso
 
-  override def aumentarHambre(porcentaje: Double): Jinete = this.copy(vikingo = vikingo.aumentarHambre(porcentaje))
+  override def aumentarHambre(porcentaje: Double): Jinete = this.copy(vikingo = vikingo.aumentarHambre(5.0))
 
   override def porcentajeHambre: Double = vikingo.porcentajeHambre
 
   override def disminuirHambre(porcentaje: Double): Jinete = this.copy(vikingo = vikingo.disminuirHambre(porcentaje))
   
   override def estaHambriento(): Boolean = vikingo.estaHambriento()
-
 }
-
-
