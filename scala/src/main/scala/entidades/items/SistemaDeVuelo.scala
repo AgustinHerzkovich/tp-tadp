@@ -1,7 +1,3 @@
 package entidades.items
 
-class SistemaDeVuelo() extends Item {
-
-}
-
-
+class SistemaDeVuelo(override val nombre: String) extends Item

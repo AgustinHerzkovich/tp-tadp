@@ -1,9 +1,7 @@
 package entidades.items
 
-import entidades.participantes.{Individuo, Vikingo}
+import entidades.participantes.Vikingo
 
-class Comestible(hambreDisminuible: Double) extends Item {
-
+class Comestible(nombre: String, hambreDisminuible: Double) extends Item {
   def comer(vikingo: Vikingo): Vikingo = vikingo.disminuirHambre(hambreDisminuible)
-
 }

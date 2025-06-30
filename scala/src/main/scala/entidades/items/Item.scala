@@ -7,8 +7,6 @@ import entidades.participantes.{Individuo, Vikingo}
 //}
 
 trait Item {
-
   def danioItem : Double = 0.0
-
+  def nombre: String = nombre
 }
-
