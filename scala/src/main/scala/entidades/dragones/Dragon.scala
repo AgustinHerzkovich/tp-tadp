@@ -5,7 +5,7 @@ import entidades.requisitos.{Requisito, RequisitoPesoMaximo}
 
 abstract class Dragon(val peso: Double, val requisitosExtra: List[Requisito], val danio: Double, val velocidadBase: Double = 60) {
 
-  var requisitos: List[Requisito] = List(new RequisitoPesoMaximo(cargaMaxima)) ++ requisitosExtra
+  def requisitos: List[Requisito] = List(new RequisitoPesoMaximo(cargaMaxima)) ++ requisitosExtra
 
   def velocidad: Double = velocidadBase - peso
 
@@ -13,5 +13,5 @@ abstract class Dragon(val peso: Double, val requisitosExtra: List[Requisito], va
     peso * 0.2
   }
 
-  def puedeSerMontado(vikingo : Vikingo): Boolean = requisitos.forall(r => r.apply(vikingo))
+  def puedeSerMontado(vikingo : Vikingo): Boolean = requisitos.forall(_.apply(vikingo))
 }

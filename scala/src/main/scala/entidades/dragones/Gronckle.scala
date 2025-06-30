@@ -1,12 +1,6 @@
 package entidades.dragones
 
-import entidades.requisitos.{Requisito, RequisitoDanio, RequisitoPesoMaximo}
+import entidades.requisitos.{Requisito, RequisitoPesoMaximo}
 
 
-
-case class Gronckle(override val peso: Double,
-                    pesoMaximoVikingo : Double,
-                    override val requisitosExtra: List[Requisito]
-                   ) extends Dragon(peso, List(new RequisitoPesoMaximo(pesoMaximoVikingo)), 5 * peso, 30){
-
-}
+case class Gronckle(override val peso: Double, pesoMaximoVikingo : Double, override val requisitosExtra: List[Requisito] = List()) extends Dragon(peso, List(new RequisitoPesoMaximo(pesoMaximoVikingo)) ++ requisitosExtra, 5 * peso, 30)
