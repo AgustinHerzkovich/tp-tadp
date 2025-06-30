@@ -4,11 +4,11 @@ import entidades.participantes.Vikingo
 import entidades.dragones.Dragon
 
 class ReglaEstandar extends Regla  {
-  def ordenDeMonturas(vikingos: List[Vikingo]): List[Vikingo] = vikingos
+  protected def ordenDeMonturas(vikingos: List[Vikingo]): List[Vikingo] = vikingos
 
   protected def quienesPasanDeRonda(vikingos: List[Vikingo]): List[Vikingo] = vikingos.dropRight(vikingos.length / 2)
 
-  protected def quienGana(vikingos: List[Vikingo]): Vikingo = vikingos.head // Cambiar por TRY o algo así por si es empty
+  def quienGana(vikingos: List[Vikingo]): Vikingo = vikingos.headOption.getOrElse(throw new NoSuchElementException("No hay ganador")) // TODO: revisar esto
 
   def quienesParticipan(vikingos: List[Vikingo]): List[Vikingo] = vikingos
 

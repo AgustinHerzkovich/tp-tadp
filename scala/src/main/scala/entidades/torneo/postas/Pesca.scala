@@ -4,6 +4,9 @@ import entidades.requisitos.{Requisito, RequisitoCargaMinima}
 import entidades.participantes.Individuo
 import entidades.requisitos.obj.NoRequisito
 
-case class Pesca(override val hambreQueGenera: Double, override val requisitoDeParticipacion: Requisito) extends Posta(){
+case class Pesca(hambre: Double, requisito: Requisito) extends Posta(){
+  override def hambreQueGenera(): Double = hambre
+  override def requisitoDeParticipacion(): Requisito = requisito
+
   require(requisitoDeParticipacion().isInstanceOf[RequisitoCargaMinima] || requisitoDeParticipacion() == NoRequisito)
 }

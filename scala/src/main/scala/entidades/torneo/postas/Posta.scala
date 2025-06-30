@@ -16,7 +16,7 @@ abstract class Posta {
 
   protected def requisitoDeParticipacion(): Requisito
 
-  protected def puedeParticipar(individuo: Individuo): Boolean = requisitoDeParticipacion()(individuo) && individuo.aumentarHambre(hambreQueGenera()).estaHambriento()
+  protected def puedeParticipar(individuo: Individuo): Boolean = requisitoDeParticipacion()(individuo) && !individuo.aumentarHambre(hambreQueGenera()).estaHambriento()
 
   private def desmontarIndividuos(individuos: List[Individuo]): List[Vikingo] = individuos.map {
     case jinete: Jinete => jinete.vikingo // Desmontar al jinete devuelve su vikingo
@@ -44,15 +44,4 @@ abstract class Posta {
       .filter(puedeParticipar)
       .reduceOption((c1, c2) => if (c1.esMejorQue(c2)(this)) c1 else c2) // Te devuelve el mejor segun criterio o none
   }
-
 }
-
-
-
-
-
-
-
-
-
-
