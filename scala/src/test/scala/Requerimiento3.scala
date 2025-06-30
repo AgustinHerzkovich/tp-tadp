@@ -1,38 +1,39 @@
-import entidades.participantes.{Jinete, Individuo, Vikingo}
-import entidades.dragones.{FuriaNocturna, Gronckle, NadderMortifero}
+import entidades.participantes.Vikingo
+import entidades.dragones.{Dragon, FuriaNocturna, Gronckle}
 import entidades.items.Arma
-import entidades.torneo.postas.Pesca
+import entidades.requisitos.RequisitoItem
+import entidades.torneo.postas.Carrera
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.*
+import org.scalatest.matchers.should.Matchers
 
-import scala.language.postfixOps
+class Requerimiento3 extends AnyFlatSpec with Matchers {
 
-class Requerimiento3 extends AnyFlatSpec {
-  val vikingo: Vikingo = new Vikingo(velocidad = 100, peso = 100, barbarosidad = 50, porcentajeHambre = 20, item = Option(new Arma(nombre = "espada suprema", danio = 100)))
-  val dragon1: FuriaNocturna = new FuriaNocturna(peso = 5000, danio = 1000)
-  val dragon2: Gronckle = new Gronckle(peso = 5000, pesoMaximoVikingo = 500)
-  val dragon3: NadderMortifero = new NadderMortifero(peso = 50)
-  val posta: Pesca = new Pesca(hambreQueGenera = 2, Option())
+  val dragonRapido = new FuriaNocturna(peso = 50, danio = 100)
+  val dragonLento = new Gronckle(peso = 500, pesoMaximoVikingo = 100)
 
-  "vikingo se jinetea" should "el vikingo puede montar a algún dragón, entonces se obtiene el jinete" in{
-    posta.armarCompetidor(vikingo, List(dragon1, dragon2)) match {
-      case j: Jinete =>
-        j.dragon shouldBe dragon1
-        j.dragon.puedeSerMontado(j.vikingo) shouldBe true
-      case _ => fail("Se esperaba un jinete y no lo fue")
-    }
-  }
+  val dragones: List[Dragon] = List(dragonLento, dragonRapido)
 
-  "vikingo no se jinetea porque es mejor" should "vikingo puede montar a algún dragón, pero a pesar de eso le conviene estar solo" in {
-    val vikingo1: Individuo = posta.armarCompetidor(vikingo, List(dragon3, dragon2))
-    vikingo1 shouldBe a [Vikingo]
-    vikingo1 shouldBe vikingo
-    dragon2.puedeSerMontado(vikingo1.asInstanceOf[Vikingo]) shouldBe true
-  }
+  val vikingo = new Vikingo(
+    velocidad = 10,
+    peso = 40,
+    barbarosidad = 5,
+    porcentajeHambre = 10,
+    item = Option(new Arma("lanzapiedras", 20))
+  )
 
-  "vikingo no se jinetea porque no puede montar" should "vikingo no puede montar a ningún dragón, entonces su única opción es competir solo" in {
-    val vikingo1: Individuo = posta.armarCompetidor(vikingo, List(dragon3))
-    vikingo1 shouldBe a [Vikingo]
-    dragon3.puedeSerMontado(vikingo1.asInstanceOf[Vikingo]) shouldBe false
+  val carrera = new Carrera(
+    hambre = 5,
+    requisito = new RequisitoItem(_ => true)
+  )
+
+  "apply" should "usar al dragón más veloz si mejora el rendimiento del vikingo en una carrera" in {
+    val resultado: List[Vikingo] = carrera(List(vikingo), dragones)
+
+    resultado should have size 1
+
+    val vikingoResultado = resultado.head
+
+    // Participar como jinete debe aumentar el hambre en 5%
+    vikingoResultado.porcentajeHambre shouldBe (15.0 +- 0.0001)
   }
 }

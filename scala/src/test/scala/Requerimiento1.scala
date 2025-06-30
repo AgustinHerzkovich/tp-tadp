@@ -14,10 +14,11 @@ class Requerimiento1 extends AnyFlatSpec with Matchers {
 
   "jineteExitoso" should "retorna un jinete si el montado fue exitoso" in {
     val jineteExitoso: Try[Jinete] = vikingo.montar(unDragon)
-    jineteExitoso.dragon shouldBe a [FuriaNocturna]
+    jineteExitoso.get.dragon shouldBe a [FuriaNocturna]
   }
 
   "jineteNoExitoso" should "retorna un failure si el montado no fue exitoso" in {
     val jineteNoExitoso: Try[Jinete] = vikingo.montar(otroDragon)
-    jineteNoExitoso shouldBe a [Vikingo]
+    jineteNoExitoso.isFailure shouldBe true
+  }
 }

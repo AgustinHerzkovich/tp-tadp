@@ -1,65 +1,49 @@
-import entidades.participantes.Vikingo
-import entidades.dragones.*
-import entidades.requisitos.{RequisitoCargaMinima, RequisitoItem}
-import entidades.torneo.reglas.{Regla, ReglaEstandar}
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers.*
+import entidades.dragones.{Dragon, FuriaNocturna}
 import entidades.items.{Arma, Comestible, SistemaDeVuelo}
+import entidades.participantes.Vikingo
+import entidades.requisitos.obj.NoRequisito
+import entidades.requisitos.{RequisitoCargaMinima, RequisitoItem}
 import entidades.torneo.Torneo
 import entidades.torneo.postas.{Carrera, Combate, Pesca, Posta}
+import entidades.torneo.reglas.ReglaEstandar
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class Requerimiento4 extends AnyFlatSpec {
+class Requerimiento4 extends AnyFlatSpec with Matchers {
 
-  // Ítem requerido por la posta de combate
   val espada = new Arma("Espada Valyria", 40.0)
 
-  // Postas (con hambre y requisitos específicos)
-  val pesca = new Pesca(hambreQueGenera = 5, new RequisitoCargaMinima(500))
-  val combate = new Combate(hambreQueGenera = 5, new RequisitoItem(espada))
-  val carrera = new Carrera(hambreQueGenera = 50, NoRequisito)
+  val pesca = new Pesca(hambre = 5, requisito = new RequisitoCargaMinima(500))
+  val combate = new Combate(hambre = 5, requisito = new RequisitoItem(i => i.isInstanceOf[Arma] && i.nombre == "Espada Valyria"))
+  val carrera = new Carrera(hambre = 50, requisito = NoRequisito)
   val postas: List[Posta] = List(pesca, combate, carrera)
 
-  // Dragones disponibles (mismo tipo, FuriaNocturna, todos iguales)
-  val dragones: List[Dragon] = List(
-    new FuriaNocturna(peso = 100.0, danio = 50.0),
-    new FuriaNocturna(peso = 100.0, danio = 50.0),
-    new FuriaNocturna(peso = 100.0, danio = 50.0)
-  )
+  val dragones: List[Dragon] = List.fill(3)(new FuriaNocturna(peso = 100.0, danio = 50.0))
 
-  // Regla estándar
   val regla = new ReglaEstandar
 
-  // Vikingos
-  val hipo = new Vikingo(20.0, 70.0, 30.0, 10.0, Option(new SistemaDeVuelo))
-  val astrid = new Vikingo(25.0, 65.0, 50.0, 15.0, Option(new Arma("Hacha Bárbara", 30.0))) // No tiene la espada
-  val patan = new Vikingo(15.0, 90.0, 80.0, 20.0, Option(new Arma("Maza Rompecráneos", 100.0))) // Tampoco tiene la espada
-  val patapez = new Vikingo(18.0, 60.0, 20.0, 40.0, Option(new Comestible(10))) // Come al final
+  val hipo = new Vikingo(20.0, 70.0, 30.0, 10.0, Option(new SistemaDeVuelo(nombre = "aerolineas argentinas")))
+  val astrid = new Vikingo(25.0, 65.0, 50.0, 15.0, Option(new Arma("Hacha Bárbara", 30.0)))
+  val patan = new Vikingo(15.0, 90.0, 80.0, 20.0, Option(new Arma("Maza Rompecráneos", 100.0)))
+  val patapez = new Vikingo(18.0, 60.0, 20.0, 40.0, Option(new Comestible("manzana de notch", 10)))
 
-  // Torneo compartido
   val torneo = new Torneo(postas, dragones, regla)
 
   "sin ganador" should "no quedan más competidores en pie, por lo tanto no hay ganador" in {
-    // Hipo no cumple carga mínima para pesca y no tiene arma para combate.
-    val resultado = torneo.realizarTorneo(List(hipo))
-    resultado shouldBe Option()
+    val resultado = torneo(List(hipo)) // usar apply
+    resultado shouldBe Option.empty
   }
 
   "ganador por último en pie" should "queda uno solo antes de que se terminen las postas, por lo tanto es el ganador" in {
-    // Solo Patán podrá seguir: él puede montar dragón y no requiere cumplir requisito de arma en pesca ni combate
-    val resultado = torneo.realizarTorneo(List(patan, hipo))
+    val resultado = torneo(List(patan, hipo))
     resultado shouldBe Option(patan)
   }
 
   "ganador por finalización de postas" should "terminan todos y se decide el ganador por la regla" in {
-    // Astrid y Patán no cumplen requisito de combate (no tienen la espada requerida).
-    // Pero asumimos que en esta versión del test se modifica combate para aceptar sus armas,
-    // o que tienen la espada. Así ambos llegan hasta el final.
     val astridConEspada = new Vikingo(25.0, 65.0, 50.0, 15.0, Option(espada))
     val patanConEspada = new Vikingo(15.0, 90.0, 80.0, 20.0, Option(espada))
 
-    val resultado = torneo.realizarTorneo(List(patanConEspada, astridConEspada))
-
-    // El que gane será el que determine la regla
+    val resultado = torneo(List(patanConEspada, astridConEspada))
     resultado shouldBe Option(regla.quienGana(List(patanConEspada, astridConEspada)))
   }
 }
