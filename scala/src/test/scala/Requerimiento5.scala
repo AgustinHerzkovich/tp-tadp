@@ -11,16 +11,16 @@ import org.scalatest.matchers.should.Matchers.*
 
 class Requerimiento5 extends AnyFlatSpec with Matchers {
 
-  val espada = new Arma("Espada", 30)
-  val dragones = List.fill(3)(new FuriaNocturna(peso = 100, danio = 50))
-  val postaGenerica = new Combate(5, new RequisitoItem(_ => true)) // deja pasar a todos
+  val espada: Arma = Arma(nombre = "Espada", danio = 30)
+  val dragones: List[FuriaNocturna] = List.fill(3)(FuriaNocturna(peso = 100, danio = 50))
+  val postaGenerica: Combate =  Combate(5, new RequisitoItem(_ => true)) // deja pasar a todos
 
-  val v1 = new Vikingo(20, 70, 30, 10, Option(espada))
-  val v2 = new Vikingo(22, 70, 30, 10, Option(espada))
-  val v3 = new Vikingo(24, 70, 30, 10, Option(espada))
-  val v4 = new Vikingo(26, 70, 30, 10, Option(espada))
+  val v1: Vikingo = Vikingo(20, 70, 30, 10, Option(espada))
+  val v2: Vikingo = Vikingo(22, 70, 30, 10, Option(espada))
+  val v3: Vikingo = Vikingo(24, 70, 30, 10, Option(espada))
+  val v4: Vikingo = Vikingo(26, 70, 30, 10, Option(espada))
 
-  val todos = List(v1, v2, v3, v4)
+  val todos: List[Vikingo] = List(v1, v2, v3, v4)
 
   "ReglaEstandar" should "eliminar a la mitad inferior" in {
     val regla = new ReglaEstandar
@@ -53,8 +53,8 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
 
   "ReglaVetoDragones" should "solo dejar dragones válidos" in {
     val dragonesPermitidos = List(
-      new FuriaNocturna(peso = 100, danio = 50),
-      new FuriaNocturna(peso = 200, danio = 10)
+      FuriaNocturna(peso = 100, danio = 50),
+      FuriaNocturna(peso = 200, danio = 10)
     )
     val veto = new ReglaVetoDragones(_.danio > 20)
     val torneo = new Torneo(List(postaGenerica), dragonesPermitidos, veto)

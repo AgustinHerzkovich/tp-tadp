@@ -4,5 +4,5 @@ import entidades.items.SistemaDeVuelo
 import entidades.participantes.Vikingo
 
 object Hipo extends Vikingo(100.0, 100.0, 100.0, 0.0){
-    override val item: Option[SistemaDeVuelo] = Option(new SistemaDeVuelo()) // overrideo el item para que sea del tipo Option[SistemaDeVuelo]
+    override val item: Option[SistemaDeVuelo] = Option(new SistemaDeVuelo(nombre = "aerolineas argentinas")) // overrideo el item para que sea del tipo Option[SistemaDeVuelo]
 }

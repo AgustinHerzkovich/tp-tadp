@@ -27,4 +27,6 @@ import entidades.items.Item
   override def disminuirHambre(porcentaje: Double): Jinete = this.copy(vikingo = vikingo.disminuirHambre(porcentaje))
   
   override def estaHambriento(): Boolean = vikingo.estaHambriento()
+  
+  override def porcentajeHambreMaximo: Double = vikingo.porcentajeHambreMaximo
 }

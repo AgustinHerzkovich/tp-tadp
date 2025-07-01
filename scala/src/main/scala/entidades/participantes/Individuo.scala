@@ -31,4 +31,5 @@ trait Individuo() extends Participante {
   
   def estaHambriento(): Boolean
   
+  def porcentajeHambreMaximo: Double
 }

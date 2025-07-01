@@ -12,8 +12,7 @@ case class Vikingo(
     peso : Double,
     barbarosidad: Double,
     porcentajeHambre: Double, // tiene sentido que este en el constructor?
-    item : Option[Item] = None,
-    porcentajeHambreMaximo: Double = 100.0
+    item : Option[Item] = None
   ) extends Individuo {
   
   override def danio : Double = {
@@ -34,6 +33,7 @@ case class Vikingo(
       Try(Jinete(vikingo = this, dragon = dragon))
   }
 
-  def estaHambriento(): Boolean = porcentajeHambre <= porcentajeHambreMaximo
+  def estaHambriento(): Boolean = porcentajeHambre >= porcentajeHambreMaximo
 
+  override def porcentajeHambreMaximo: Double = 100.0
 }

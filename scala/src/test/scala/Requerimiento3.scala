@@ -1,19 +1,19 @@
 import entidades.participantes.Vikingo
 import entidades.dragones.{Dragon, FuriaNocturna, Gronckle}
 import entidades.items.Arma
-import entidades.requisitos.RequisitoItem
+import entidades.requisitos.obj.NoRequisito
 import entidades.torneo.postas.Carrera
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class Requerimiento3 extends AnyFlatSpec with Matchers {
 
-  val dragonRapido = new FuriaNocturna(peso = 50, danio = 100)
-  val dragonLento = new Gronckle(peso = 500, pesoMaximoVikingo = 100)
+  val dragonRapido: FuriaNocturna = FuriaNocturna(peso = 50, danio = 100)
+  val dragonLento: Gronckle = Gronckle(peso = 500, pesoMaximoVikingo = 100)
 
   val dragones: List[Dragon] = List(dragonLento, dragonRapido)
 
-  val vikingo = new Vikingo(
+  val vikingo: Vikingo = Vikingo(
     velocidad = 10,
     peso = 40,
     barbarosidad = 5,
@@ -21,9 +21,9 @@ class Requerimiento3 extends AnyFlatSpec with Matchers {
     item = Option(new Arma("lanzapiedras", 20))
   )
 
-  val carrera = new Carrera(
+  val carrera: Carrera = Carrera(
     hambre = 5,
-    requisito = new RequisitoItem(_ => true)
+    requisito = NoRequisito
   )
 
   "apply" should "usar al dragón más veloz si mejora el rendimiento del vikingo en una carrera" in {
