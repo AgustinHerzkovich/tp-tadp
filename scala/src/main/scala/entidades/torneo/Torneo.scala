@@ -14,8 +14,12 @@ class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) 
 
   private def realizarRondas(vikingos: List[Vikingo], postas: List[Posta], dragonesDisponibles: List[Dragon]): Option[Vikingo] = {
     val vikingosFinales = postas.foldLeft(vikingos) { (participantes, posta) =>
-      val despuesDePosta = posta(participantes, dragonesDisponibles)
-      regla.aprobados(despuesDePosta)
+      if (participantes.size == 1 || postas.isEmpty) {
+        List(regla.quienGana(vikingos))
+      } else {
+        val despuesDePosta = posta(participantes, dragonesDisponibles)
+        regla.aprobados(despuesDePosta)
+      }
     }
 
     Option.when(vikingosFinales.nonEmpty)(regla.quienGana(vikingosFinales))

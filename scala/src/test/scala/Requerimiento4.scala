@@ -19,7 +19,7 @@ class Requerimiento4 extends AnyFlatSpec with Matchers {
   val carrera: Carrera = Carrera(hambre = 50, requisito = NoRequisito)
   val postas: List[Posta] = List(pesca, combate, carrera)
 
-  val dragones: List[Dragon] = List.fill(3)(new FuriaNocturna(peso = 100.0, danio = 50.0))
+  val dragones: List[Dragon] = List.fill(3)(new FuriaNocturna(peso = 5000.0, danio = 50.0))
 
   val regla = new ReglaEstandar
 
