@@ -1,5 +1,5 @@
 package entidades.participantes
 
-case class Equipo(individuos: List[Individuo]) extends Participante {
+case class Equipo(vikingos: List[Vikingo]) extends Participante {
 
 }

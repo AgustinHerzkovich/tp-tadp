@@ -3,7 +3,7 @@ package entidades.participantes
 import entidades.items.Item
 import entidades.torneo.postas.{Carrera, Combate, Pesca, Posta}
 
-trait Individuo() extends Participante {
+trait Individuo() {
 
   def velocidad: Double
 

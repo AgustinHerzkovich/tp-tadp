@@ -1,27 +1,20 @@
 package entidades.torneo
 
-import entidades.participantes.Vikingo
+import entidades.participantes.{Participante, Vikingo}
 import entidades.dragones.Dragon
 import entidades.torneo.postas.Posta
 import entidades.torneo.reglas.Regla
 
-class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) {
-  def apply(vikingos : List[Vikingo]): Option[Vikingo] = {
+class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) { // Si la regla es de equipos, entonces el torneo se juega por equipos
+  def apply(participantes : List[Vikingo]): Option[Vikingo] = {
     val dragonesDisponibles: List[Dragon] = regla.dragonesDisponibles(dragones)
-    val vikingosQueParticipan: List[Vikingo] = regla.quienesParticipan(vikingos)
-    realizarRondas(vikingosQueParticipan, postas, dragonesDisponibles)
-  }
-/*
-  private def realizarRondas(vikingos: List[Vikingo], postas: List[Posta], dragonesDisponibles: List[Dragon]): Option[Vikingo] = {
-    val vikingosFinales = postas.foldLeft(vikingos) { (participantes, posta) =>
-      if (participantes.isEmpty) {
-        // Si no hay participantes, terminamos
-        Nil
-      } else if (participantes.size == 1) {
-        // Si solo queda uno, es el ganador
+    //val participantesValidos = regla.participantesValidos(participantes) // Filtrar participantes que no cumplen con la regla
+    //val vikingosQueParticipan: List[Vikingo] = regla.prepararVikingos(participantesValidos) // Desarmar equipos o nada
+
+    val vikingosFinales = postas.foldLeft(participantes) { (participantes, posta) =>
+      if (participantes.size == 1) {
         participantes
       } else {
-        // Ejecutar la posta y aplicar las reglas
         val despuesDePosta = posta(participantes, dragonesDisponibles)
         regla.aprobados(despuesDePosta)
       }
@@ -29,47 +22,25 @@ class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) 
 
     Option.when(vikingosFinales.nonEmpty)(regla.quienGana(vikingosFinales))
   }
+}
+/*
+Por Equipo:
+  Los vikingos pueden tener equipo
+  Al torneo se inscriben equipos
+  Participar implica que cada jugador eliga un dragon
+  Se elimina la peor mitad de jugadores
+  Se reagrupan los restantes para la siguiente ronda
+  Si quedan varios equipos gana el de más jugadores
+  Si hay varios se elige cualquiera arbitrariamente
 */
 
-    private def realizarRondas(vikingos: List[Vikingo], postas: List[Posta], dragonesDisponibles: List[Dragon]): Option[Vikingo] = {
-      val vikingosFinales = postas.foldLeft(vikingos) { (participantes, posta) =>
-        if (participantes.size == 1 || postas.isEmpty) {
-          List(regla.quienGana(participantes))
-        } else {
-          val despuesDePosta = posta(participantes, dragonesDisponibles)
-          regla.aprobados(despuesDePosta)
-        }
-      }
+/*
+Opcion 1:
+  Tenemos equipo: Option[String] en Vikingo
+  participantesValidos: List[Vikingo] = participantes.filter(_.equipo.isDefined)
+  No hace falta usar prepararVikingos
 
-      Option.when(vikingosFinales.nonEmpty)(regla.quienGana(vikingosFinales))
-    }
+Opcion 2:
+  Tenemos objeto equipo que es una lista de vikingos,
 
-/* version vieja
-  // TODO: Pasar esto a Fold
-  private def realizarRondas(vikingos : List[Vikingo], postas : List[Posta], dragonesDiponibles : List[Dragon]): Option[Vikingo] = (vikingos, postas) match {
-    case (Nil, _) => Option(null) // Esta mal pattern matchear asi igual
-    case (vikingo :: Nil, _)  => Option(vikingo)
-    case (_, Nil) => Option(regla.quienGana(vikingos))
-    case (vikingos, posta :: siguientes)  =>  {
-      val vikingosOrdenadosParaMontar: List[Vikingo] = regla.ordenDeMonturas(vikingos)
-      val vikingosDespuesDe: List[Vikingo] = posta(vikingosOrdenadosParaMontar, dragonesDiponibles)
-      val vikingosQuePasan: List[Vikingo] = regla.quienesPasanDeRonda(vikingosDespuesDe)
-      realizarRondas(vikingosQuePasan, siguientes, dragonesDiponibles)
-    }
-  }
-  */
-/* otra alternativa
-  private def realizarRondas(vikingos: List[Vikingo], postas: List[Posta], dragonesDisponibles: List[Dragon]): Option[Vikingo] = {
-  if (vikingos.isEmpty) Option.empty
-  else if (vikingos.size == 1 || postas.isEmpty)
-    Option(regla.quienGana(vikingos))
-  else {
-    val vikingosPosta = postas.head(vikingos, dragonesDisponibles)
-    val vikingosQuePasan = regla.aprobados(vikingosPosta)
-    realizarRondas(vikingosQuePasan, postas.tail, dragonesDisponibles)
-  }
-}
 */
-
-
-}

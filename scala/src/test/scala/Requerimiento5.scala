@@ -6,6 +6,7 @@ import entidades.requisitos.obj.NoRequisito
 import entidades.torneo.Torneo
 import entidades.torneo.postas.Carrera
 import entidades.torneo.reglas.*
+import entidades.torneo.reglas.obj.{ReglaHandicap, ReglaTorneoInverso}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -29,7 +30,7 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
   }
 
   "ReglaHandicap" should "invertir el orden de monturas y mantener reglas estándar de eliminación" in {
-    val regla = ReglaHandicap()
+    val regla = ReglaHandicap
     val torneo = Torneo(List(carreraSimple), dragones, regla)
 
     val resultado = torneo(participantes)
@@ -40,7 +41,7 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
   }
 
   "ReglaTorneoInverso" should "mantener la mitad inferior y elegir al último" in {
-    val regla = ReglaTorneoInverso()
+    val regla = ReglaTorneoInverso
     val torneo = Torneo(List(carreraSimple), dragones, regla)
 
     val resultado = torneo(participantes)

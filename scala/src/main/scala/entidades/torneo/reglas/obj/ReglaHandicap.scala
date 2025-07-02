@@ -1,6 +1,8 @@
-package entidades.torneo.reglas
-import entidades.participantes.Vikingo
+package entidades.torneo.reglas.obj
 
-class ReglaHandicap extends ReglaEstandar {
+import entidades.participantes.Vikingo
+import entidades.torneo.reglas.ReglaEstandar
+
+object ReglaHandicap extends ReglaEstandar {
   override protected def ordenDeMonturas(vikingos: List[Vikingo]): List[Vikingo] = vikingos.reverse
 }

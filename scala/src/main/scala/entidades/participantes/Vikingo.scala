@@ -13,7 +13,7 @@ case class Vikingo(
     barbarosidad: Double,
     porcentajeHambre: Double, // tiene sentido que este en el constructor?
     item : Option[Item] = None
-  ) extends Individuo {
+  ) extends Individuo, Participante {
   
   override def danio : Double = {
     this.barbarosidad + this.item.map(x =>x.danioItem).getOrElse(0.0)
@@ -27,7 +27,7 @@ case class Vikingo(
 
   override def disminuirHambre(porcentaje: Double): Vikingo = this.copy(porcentajeHambre = this.porcentajeHambre - porcentaje)
 
-  def postParticipar(): Vikingo = this // Devuelve el vikingo sin cambios, luego Patapez overridea
+  def accionLuegoDeParticiparEnPosta(): Vikingo = this // Devuelve el vikingo sin cambios, luego Patapez overridea
 
   def montar(dragon: Dragon): Try[Jinete] = {
       Try(Jinete(vikingo = this, dragon = dragon))
