@@ -4,4 +4,4 @@ import entidades.dragones.FuriaNocturna
 import entidades.items.SistemaDeVuelo
 import entidades.requisitos.RequisitoItem
 
-object Chimuelo extends FuriaNocturna(100.0, List(new RequisitoItem(_.isInstanceOf[SistemaDeVuelo])), 100.0)
+object Chimuelo extends FuriaNocturna(peso = 5000.0, requisitosExtra = List(new RequisitoItem(_.isInstanceOf[SistemaDeVuelo])), danio = 50.0)
