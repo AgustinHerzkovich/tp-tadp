@@ -18,7 +18,7 @@ class Requerimiento3 extends AnyFlatSpec with Matchers {
     peso = 40,
     barbarosidad = 5,
     porcentajeHambre = 10,
-    item = Option(new Arma("lanzapiedras", 20))
+    item = Option(Arma("lanzapiedras", 20))
   )
 
   val carrera: Carrera = Carrera(

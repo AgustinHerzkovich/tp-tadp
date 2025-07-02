@@ -1,65 +1,97 @@
-import entidades.dragones.FuriaNocturna
-import entidades.items.Arma
+import entidades.dragones.obj.Chimuelo
+import entidades.dragones.{Dragon, FuriaNocturna}
 import entidades.participantes.Vikingo
-import entidades.requisitos.RequisitoItem
+import entidades.participantes.obj.{Astrid, Hipo, Patan, Patapez}
+import entidades.requisitos.obj.NoRequisito
 import entidades.torneo.Torneo
-import entidades.torneo.postas.Combate
-import entidades.torneo.reglas.{ReglaEliminacion, ReglaEstandar, ReglaHandicap, ReglaTorneoInverso, ReglaVetoDragones}
+import entidades.torneo.postas.Carrera
+import entidades.torneo.reglas.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.matchers.should.Matchers.*
 
 class Requerimiento5 extends AnyFlatSpec with Matchers {
 
-  val espada: Arma = Arma(nombre = "Espada", danio = 30)
-  val dragones: List[FuriaNocturna] = List.fill(3)(FuriaNocturna(peso = 100, danio = 50))
-  val postaGenerica: Combate =  Combate(5, new RequisitoItem(_ => true)) // deja pasar a todos
+  // Configuración común para todos los tests
+  val dragones: List[Dragon] = List.fill(3)(Chimuelo)
+  val carreraSimple: Carrera = Carrera(hambre = 5, requisito = NoRequisito)
 
-  val v1: Vikingo = Vikingo(20, 70, 30, 10, Option(espada))
-  val v2: Vikingo = Vikingo(22, 70, 30, 10, Option(espada))
-  val v3: Vikingo = Vikingo(24, 70, 30, 10, Option(espada))
-  val v4: Vikingo = Vikingo(26, 70, 30, 10, Option(espada))
+  // Lista de vikingos para las pruebas
+  val participantes: List[Vikingo] = List(Hipo, Astrid, Patan, Patapez)
 
-  val todos: List[Vikingo] = List(v1, v2, v3, v4)
+  "ReglaEstandar" should "eliminar la mitad inferior y elegir al primer vikingo" in {
+    val regla = ReglaEstandar()
+    val torneo = Torneo(List(carreraSimple), dragones, regla)
 
-  "ReglaEstandar" should "eliminar a la mitad inferior" in {
-    val regla = new ReglaEstandar
-    val torneo = new Torneo(List(postaGenerica), dragones, regla)
-    val resultado = torneo(todos)
-    resultado shouldBe Option(regla.quienGana(List(v1, v2))) // los dos primeros sobreviven
+    val resultado = torneo(participantes)
+
+    // Hipo debería ganar siendo el primero de la mitad superior, por ser el más rápido
+    resultado shouldBe Option(Hipo.aumentarHambre(5.0))
   }
 
-  "ReglaEliminacion" should "eliminar cantidad fija" in {
-    val regla = new ReglaEliminacion(3)
-    val torneo = new Torneo(List(postaGenerica), dragones, regla)
-    val resultado = torneo(todos)
-    resultado shouldBe Option(v1) // solo queda el primero
+  "ReglaHandicap" should "invertir el orden de monturas y mantener reglas estándar de eliminación" in {
+    val regla = ReglaHandicap()
+    val torneo = Torneo(List(carreraSimple), dragones, regla)
+
+    val resultado = torneo(participantes)
+
+    // Al invertir el orden, Patapez debería montar primero
+    // Patapez tiene comportamiento especial con el hambre (lo disminuye en vez de aumentar)
+    resultado shouldBe Option(Patapez.disminuirHambre(10.0))
   }
 
-  "ReglaHandicap" should "invertir el orden de montura" in {
-    val regla = new ReglaHandicap
-    val torneo = new Torneo(List(postaGenerica), dragones, regla)
-    // Verificamos que el orden fue invertido al montar
-    val resultado = torneo(todos)
-    resultado shouldBe Option(regla.quienGana(List(v4, v3))) // debería quedar el grupo montado al revés
+  "ReglaTorneoInverso" should "mantener la mitad inferior y elegir al último" in {
+    val regla = ReglaTorneoInverso()
+    val torneo = Torneo(List(carreraSimple), dragones, regla)
+
+    val resultado = torneo(participantes)
+
+    // Debería quedarse con Patan y Astrid (mitad inferior) y elegir a Astrid por ser último
+    resultado shouldBe Option(Astrid.aumentarHambre(5.0))
   }
 
-  "ReglaTorneoInverso" should "mantener a la mitad inferior y elegir al último" in {
-    val regla = new ReglaTorneoInverso
-    val torneo = new Torneo(List(postaGenerica), dragones, regla)
-    val resultado = torneo(todos)
-    resultado shouldBe Option(v4) // se queda con la mitad más débil, el último gana
+  "ReglaEliminacion" should "eliminar una cantidad fija de vikingos" in {
+    val regla = ReglaEliminacion(2)
+    val torneo = Torneo(List(carreraSimple), dragones, regla)
+
+    val resultado = torneo(participantes)
+
+    // Deberían quedar solo Hipo y Astrid, ganando Hipo
+    resultado shouldBe Option(Hipo.aumentarHambre(5.0))
   }
 
-  "ReglaVetoDragones" should "solo dejar dragones válidos" in {
-    val dragonesPermitidos = List(
-      FuriaNocturna(peso = 100, danio = 50),
-      FuriaNocturna(peso = 200, danio = 10)
+  "ReglaVetoDragones" should "filtrar dragones según el criterio establecido" in {
+    // Creamos dragones con diferentes daños
+    val dragonesVariados = List(
+      FuriaNocturna(peso = 5000, danio = 30),
+      FuriaNocturna(peso = 5000, danio = 60),
+      FuriaNocturna(peso = 5000, danio = 40)
     )
-    val veto = new ReglaVetoDragones(_.danio > 20)
-    val torneo = new Torneo(List(postaGenerica), dragonesPermitidos, veto)
-    val resultado = torneo(todos)
-    // solo quedan los que lograron montar dragones con danio > 20
-    resultado.isDefined shouldBe true
+
+    val regla = ReglaVetoDragones(_.danio > 50)
+    val torneo = Torneo(List(carreraSimple), dragonesVariados, regla)
+
+    val resultado = torneo(participantes)
+
+    // El ganador debería tener el hambre aumentada por participar
+    resultado shouldBe Option(Hipo.aumentarHambre(5.0))
   }
+/* TODO: Hacer test para regla de equipos
+  "ReglaEquipos" should "manejar correctamente equipos y elegir al equipo con más jugadores" in {
+    val regla = ReglaEquipos()
+
+    // Creamos dos equipos
+    val equipo1 = Equipo(List(Hipo, Astrid, Patan))
+    val equipo2 = Equipo(List(Patapez))
+
+    val torneo = Torneo(List(carreraSimple), dragones, regla)
+
+    val resultado = torneo(List(equipo1, equipo2))
+
+    // Debería ganar alguien del equipo1 por tener más miembros
+    resultado.get shouldBe a [Vikingo]
+
+    // El ganador debería ser del equipo más grande
+    equipo1.individuos.contains(resultado.get) shouldBe true
+  }
+*/
 }
