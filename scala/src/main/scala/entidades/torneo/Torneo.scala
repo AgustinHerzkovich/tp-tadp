@@ -11,12 +11,17 @@ class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) 
     val vikingosQueParticipan: List[Vikingo] = regla.quienesParticipan(vikingos)
     realizarRondas(vikingosQueParticipan, postas, dragonesDisponibles)
   }
-
+/*
   private def realizarRondas(vikingos: List[Vikingo], postas: List[Posta], dragonesDisponibles: List[Dragon]): Option[Vikingo] = {
     val vikingosFinales = postas.foldLeft(vikingos) { (participantes, posta) =>
-      if (participantes.size == 1 || postas.isEmpty) {
-        List(regla.quienGana(vikingos))
+      if (participantes.isEmpty) {
+        // Si no hay participantes, terminamos
+        Nil
+      } else if (participantes.size == 1) {
+        // Si solo queda uno, es el ganador
+        participantes
       } else {
+        // Ejecutar la posta y aplicar las reglas
         val despuesDePosta = posta(participantes, dragonesDisponibles)
         regla.aprobados(despuesDePosta)
       }
@@ -24,6 +29,20 @@ class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) 
 
     Option.when(vikingosFinales.nonEmpty)(regla.quienGana(vikingosFinales))
   }
+*/
+
+    private def realizarRondas(vikingos: List[Vikingo], postas: List[Posta], dragonesDisponibles: List[Dragon]): Option[Vikingo] = {
+      val vikingosFinales = postas.foldLeft(vikingos) { (participantes, posta) =>
+        if (participantes.size == 1 || postas.isEmpty) {
+          List(regla.quienGana(participantes))
+        } else {
+          val despuesDePosta = posta(participantes, dragonesDisponibles)
+          regla.aprobados(despuesDePosta)
+        }
+      }
+
+      Option.when(vikingosFinales.nonEmpty)(regla.quienGana(vikingosFinales))
+    }
 
 /* version vieja
   // TODO: Pasar esto a Fold
@@ -45,12 +64,12 @@ class Torneo(val postas: List[Posta], val dragones: List[Dragon], regla: Regla) 
   else if (vikingos.size == 1 || postas.isEmpty)
     Option(regla.quienGana(vikingos))
   else {
-    val vikingosMontura = regla.ordenDeMonturas(vikingos)
-    val vikingosPosta = postas.head(vikingosMontura, dragonesDisponibles)
-    val vikingosQuePasan = regla.quienesPasanDeRonda(vikingosPosta)
+    val vikingosPosta = postas.head(vikingos, dragonesDisponibles)
+    val vikingosQuePasan = regla.aprobados(vikingosPosta)
     realizarRondas(vikingosQuePasan, postas.tail, dragonesDisponibles)
   }
 }
+*/
 
- */
+
 }

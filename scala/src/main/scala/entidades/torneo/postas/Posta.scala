@@ -9,8 +9,8 @@ abstract class Posta {
   def apply(vikingos: List[Vikingo], dragones: List[Dragon]): List[Vikingo] = {
     var individuos: List[Individuo] = armarIndividuos(vikingos, dragones)
     individuos = individuos.sortWith((c1, c2) => c1.esMejorQue(c2)(this)) // ACA PASAMOS LISTA DE individuos AL TORNEO PARA QUE LUEGO LA REGLA FILTRE EVERYTHING
-    var desmontados = desmontarIndividuos(individuos)
-    var despuesDePosta = desmontados.map(vikingo => vikingo.aumentarHambre(hambreQueGenera()).postParticipar()) // Acciones que se realizan luego de participar
+    val desmontados = desmontarIndividuos(individuos)
+    val despuesDePosta = desmontados.map(vikingo => vikingo.aumentarHambre(hambreQueGenera()).postParticipar()) // Acciones que se realizan luego de participar
     despuesDePosta
   }
   
