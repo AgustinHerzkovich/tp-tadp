@@ -6,27 +6,32 @@ import entidades.requisitos.Requisito
 
 abstract class Posta {
 
+  // Aplica la posta: arma los participantes posibles (vikingos o jinetes), ordena por rendimiento,
+  // los desmonta y les aplica los efectos post-participación (hambre + posibles acciones).
   def apply(vikingos: List[Vikingo], dragones: List[Dragon]): List[Vikingo] = {
     val individuos = armarIndividuos(vikingos, dragones)
       .sortWith((c1, c2) => c1.esMejorQue(c2)(this))
 
     desmontarIndividuos(individuos)
       .map(vikingo => vikingo
-        .aumentarHambre(hambreQueGenera())
-        .accionLuegoDeParticiparEnPosta()) // Acciones que se realizan luego de participar
+        .aumentarHambre(hambreQueGenera()) // Aplica el costo energético de participar
+        .accionLuegoDeParticiparEnPosta()) // hook para efectos personalizados luego de participar (como Patapez)
   }
-  
+
   protected def hambreQueGenera(): Double
 
   protected def requisitoDeParticipacion(): Requisito
 
   protected def puedeParticipar(individuo: Individuo): Boolean = requisitoDeParticipacion()(individuo) && !individuo.aumentarHambre(hambreQueGenera()).estaHambriento()
 
+  // Convierte una lista de individuos en una lista de vikingos desmontados (para continuar el torneo).
   private def desmontarIndividuos(individuos: List[Individuo]): List[Vikingo] = individuos.map {
     case jinete: Jinete => jinete.vikingo // Desmontar al jinete devuelve su vikingo
     case vikingo: Vikingo => vikingo
   }
-  
+
+  // Arma la lista de individuos que efectivamente participan en esta posta, seleccionando
+  // para cada vikingo su mejor forma de competir (montado o no), si es que puede hacerlo.
   private def armarIndividuos(vikingos: List[Vikingo], dragonesDisponibles: List[Dragon]): List[Individuo] = {
     val (individuos, _) = vikingos.foldLeft((List.empty[Individuo], dragonesDisponibles)) {
       case ((individuosAcumulados, dragonesRestantes), vikingo) => //parametros de lambda, descomponemos tupla
@@ -42,6 +47,8 @@ abstract class Posta {
     individuos
   }
 
+  // Devuelve la mejor forma en la que un vikingo puede participar: montado o no.
+  // Evalúa todas las opciones posibles y elige la mejor según la posta (siempre que cumpla los requisitos).
   private def mejorOpcion(vikingo: Vikingo, dragones: List[Dragon]): Option[Individuo] = {
     val opciones = vikingo :: dragones.flatMap(d => vikingo
       .montar(d)
@@ -49,6 +56,6 @@ abstract class Posta {
 
     opciones
       .filter(puedeParticipar)
-      .reduceOption((c1, c2) => if (c1.esMejorQue(c2)(this)) c1 else c2) // Te devuelve el mejor segun criterio o none
+      .reduceOption((c1, c2) => if (c1.esMejorQue(c2)(this)) c1 else c2) // Te devuelve el mejor segun criterio o None
   }
 }

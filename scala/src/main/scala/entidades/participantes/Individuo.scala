@@ -23,7 +23,7 @@ trait Individuo() {
 
   def disminuirHambre(porcentaje: Double): Individuo
 
-  def esMejorQue(individuo: Individuo): Posta => Boolean = {
+  def esMejorQue(individuo: Individuo): Posta => Boolean = { // Miro el tipo de posta para saber si es mejor que el otro individuo
     case _: Combate => this.danio >= individuo.danio
     case _: Pesca => this.cargaMaxima >= individuo.cargaMaxima
     case _: Carrera => this.velocidad >= individuo.velocidad

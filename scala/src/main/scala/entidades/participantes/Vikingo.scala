@@ -14,7 +14,8 @@ case class Vikingo(
     porcentajeHambre: Double, // tiene sentido que este en el constructor?
     item : Option[Item] = None
   ) extends Individuo, Participante {
-  
+
+  // Daño que puede causar, depende de su barbarosidad más el daño del ítem si lo tiene.
   override def danio : Double = {
     this.barbarosidad + this.item.map(x =>x.danioItem).getOrElse(0.0)
   }
@@ -27,8 +28,10 @@ case class Vikingo(
 
   override def disminuirHambre(porcentaje: Double): Vikingo = this.copy(porcentajeHambre = this.porcentajeHambre - porcentaje)
 
-  def accionLuegoDeParticiparEnPosta(): Vikingo = this // Devuelve el vikingo sin cambios, luego Patapez overridea
+  // Acción por defecto luego de participar en una posta (puede ser overrideado por otras subclases como Patapez).
+  def accionLuegoDeParticiparEnPosta(): Vikingo = this
 
+  // Intenta montar un dragón. Si falla algún requisito, lanza una excepción.
   def montar(dragon: Dragon): Try[Jinete] = {
       Try(Jinete(vikingo = this, dragon = dragon))
   }

@@ -8,5 +8,4 @@ class RequisitoMontura extends Requisito{
       case _:Jinete => true
       case _ => false
   }
-
 }
