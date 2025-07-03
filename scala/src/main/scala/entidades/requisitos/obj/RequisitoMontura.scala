@@ -1,8 +1,9 @@
-package entidades.requisitos
+package entidades.requisitos.obj
 
 import entidades.participantes.{Individuo, Jinete}
+import entidades.requisitos.Requisito
 
-class RequisitoMontura extends Requisito{
+object RequisitoMontura extends Requisito{
 
   override def apply(individuo: Individuo) = individuo match {
       case _:Jinete => true
