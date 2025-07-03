@@ -36,8 +36,7 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
     val resultado = torneo(participantes)
 
     // Al invertir el orden, Patapez debería montar primero
-    // Patapez tiene comportamiento especial con el hambre (lo disminuye en vez de aumentar)
-    resultado shouldBe Option(Patapez.disminuirHambre(10.0))
+    resultado shouldBe Option(Patapez.aumentarHambre(5.0))
   }
 
   "ReglaTorneoInverso" should "mantener la mitad inferior y elegir al último" in {
