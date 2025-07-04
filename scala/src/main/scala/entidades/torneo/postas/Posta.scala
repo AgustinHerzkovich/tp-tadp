@@ -34,17 +34,20 @@ abstract class Posta {
   // para cada vikingo su mejor forma de competir (montado o no), si es que puede hacerlo.
   private def armarIndividuos(vikingos: List[Vikingo], dragonesDisponibles: List[Dragon]): List[Individuo] = {
     val (individuos, _) = vikingos.foldLeft((List.empty[Individuo], dragonesDisponibles)) {
-      case ((individuosAcumulados, dragonesRestantes), vikingo) => //parametros de lambda, descomponemos tupla
-        // armarIndividuo devuelve Option[Individuo], fold solo ejecuta si hay un Individuo 
-        mejorOpcion(vikingo, dragonesRestantes).fold((individuosAcumulados, dragonesRestantes)) {
-          case jinete: Jinete =>
-            (individuosAcumulados :+ jinete, dragonesRestantes.filterNot(_ eq jinete.dragon))
-          case vik: Vikingo =>
-            (individuosAcumulados :+ vik, dragonesRestantes)
-        }
+      case ((individuosAcumulados, dragonesRestantes), vikingo) => // parametros de lambda, descomponemos tupla
+        mejorOpcion(vikingo, dragonesRestantes)
+          .map(individuo => agregarIndividuo(individuosAcumulados, dragonesRestantes, individuo)) // Si hay una opción válida, la agregamos a la lista de individuos y actualizamos la lista de dragones
+          .getOrElse((individuosAcumulados, dragonesRestantes)) // Si no hay forma válida de participar, mantenemos las listas como estaban
     }
-    
     individuos
+  }
+
+  // Dado un individuo (vikingo o jinete), lo agrega a la lista y actualiza la lista de dragones si corresponde.
+  private def agregarIndividuo(individuosAcumulados: List[Individuo], dragones: List[Dragon], individuo: Individuo): (List[Individuo], List[Dragon]) = individuo match {
+    case jinete: Jinete =>
+      (individuosAcumulados :+ jinete, dragones.filterNot(_ eq jinete.dragon)) // Si el vikingo monta un dragón, se remueve ese dragón de los disponibles
+    case vik: Vikingo =>
+      (individuosAcumulados :+ vik, dragones) // Si participa sin montar, la lista de dragones queda igual
   }
 
   // Devuelve la mejor forma en la que un vikingo puede participar: montado o no.
