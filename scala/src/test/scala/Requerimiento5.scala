@@ -1,12 +1,12 @@
 import entidades.dragones.obj.Chimuelo
 import entidades.dragones.{Dragon, FuriaNocturna}
-import entidades.participantes.Vikingo
+import entidades.participantes.{Equipo, Vikingo}
 import entidades.participantes.obj.{Astrid, Hipo, Patan, Patapez}
 import entidades.requisitos.obj.NoRequisito
 import entidades.torneo.Torneo
 import entidades.torneo.postas.Carrera
 import entidades.torneo.reglas.*
-import entidades.torneo.reglas.obj.{ReglaHandicap, ReglaTorneoInverso}
+import entidades.torneo.reglas.obj.{ReglaEquipos, ReglaHandicap, ReglaTorneoInverso}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -75,23 +75,26 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
     // El ganador debería tener el hambre aumentada por participar
     resultado shouldBe Option(Hipo.aumentarHambre(5.0))
   }
-/* TODO: Hacer test para regla de equipos
-  "ReglaEquipos" should "manejar correctamente equipos y elegir al equipo con más jugadores" in {
-    val regla = ReglaEquipos()
 
-    // Creamos dos equipos
-    val equipo1 = Equipo(List(Hipo, Astrid, Patan))
-    val equipo2 = Equipo(List(Patapez))
-
+  "ReglaEquipos" should "eliminar la mitad de los peores y declarar ganador al equipo con más miembros" in {
+    val regla = ReglaEquipos
     val torneo = Torneo(List(carreraSimple), dragones, regla)
 
-    val resultado = torneo(List(equipo1, equipo2))
+    // Asignamos equipo a cada vikingo
+    val hipoConEquipo = Hipo.copy(equipo = Option("Equipo Rojo"))
+    val astridConEquipo = Astrid.copy(equipo = Option("Equipo Azul"))
+    val patanConEquipo = Patan.copy(equipo = Option("Equipo Azul"))
+    val patapezConEquipo = Patapez.copy(equipo = Option("Equipo Rojo"))
 
-    // Debería ganar alguien del equipo1 por tener más miembros
-    resultado.get shouldBe a [Vikingo]
+    // Equipos formados
+    val equipoRojo = Equipo(nombre = "Equipo Rojo", miembros = List(hipoConEquipo, patapezConEquipo))
+    val equipoAzul = Equipo(nombre = "Equipo Azul", miembros = List(astridConEquipo, patanConEquipo))
 
-    // El ganador debería ser del equipo más grande
-    equipo1.individuos.contains(resultado.get) shouldBe true
+    val resultado = torneo(List(equipoRojo, equipoAzul))
+
+    // Gana el Equipo Azul pero solo queda un miembro, Patan
+    val equipoEsperado = Equipo(nombre = "Equipo Azul", miembros = List(patanConEquipo.aumentarHambre(5.0)))
+
+    resultado shouldBe Option(equipoEsperado)
   }
-*/
 }

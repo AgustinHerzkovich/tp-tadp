@@ -11,8 +11,9 @@ case class Vikingo(
     velocidad: Double,
     peso : Double,
     barbarosidad: Double,
-    porcentajeHambre: Double, // tiene sentido que este en el constructor?
-    item : Option[Item] = None
+    porcentajeHambre: Double,
+    item : Option[Item] = None,
+    equipo: Option[String] = None
   ) extends Individuo, Participante {
 
   // Daño que puede causar, depende de su barbarosidad más el daño del ítem si lo tiene.
