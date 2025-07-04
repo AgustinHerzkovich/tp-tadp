@@ -5,7 +5,7 @@ import entidades.requisitos.{Requisito, RequisitoPesoMaximo}
 
 abstract class Dragon(val peso: Double, val requisitosExtra: List[Requisito], val danio: Double, val velocidadBase: Double = 60) {
 
-  def requisitos: List[Requisito] = List(new RequisitoPesoMaximo(cargaMaxima)) ++ requisitosExtra
+  def requisitos: List[Requisito] = List(RequisitoPesoMaximo(cargaMaxima)) ++ requisitosExtra
 
   def velocidad: Double = velocidadBase - peso
 

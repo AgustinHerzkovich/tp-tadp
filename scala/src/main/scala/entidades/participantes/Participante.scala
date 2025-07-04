@@ -1,3 +1,5 @@
 package entidades.participantes
 
-trait Participante()
+trait Participante() {
+  val nombre: String
+}

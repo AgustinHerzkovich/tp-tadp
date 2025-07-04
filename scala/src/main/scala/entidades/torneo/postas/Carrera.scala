@@ -3,9 +3,6 @@
   import entidades.requisitos.obj.{NoRequisito, RequisitoMontura}
   import entidades.requisitos.Requisito
 
-  case class Carrera(hambre: Double, requisito: Requisito) extends Posta{
-    override def hambreQueGenera(): Double = hambre
-    override def requisitoDeParticipacion(): Requisito = requisito
-
-    require(requisitoDeParticipacion() == RequisitoMontura || requisitoDeParticipacion() == NoRequisito)
+  case class Carrera(override val hambreQueGenera: Double, override val requisitoDeParticipacion: Requisito) extends Posta{
+    require(requisitoDeParticipacion == RequisitoMontura || requisitoDeParticipacion == NoRequisito)
   }

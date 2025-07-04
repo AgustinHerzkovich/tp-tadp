@@ -14,7 +14,7 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
 
   // Configuración común para todos los tests
   val dragones: List[Dragon] = List.fill(3)(Chimuelo)
-  val carreraSimple: Carrera = Carrera(hambre = 5, requisito = NoRequisito)
+  val carreraSimple: Carrera = Carrera(hambreQueGenera = 5, requisitoDeParticipacion = NoRequisito)
 
   // Lista de vikingos para las pruebas
   val participantes: List[Vikingo] = List(Hipo, Astrid, Patan, Patapez)
@@ -80,21 +80,24 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
     val regla = ReglaEquipos
     val torneo = Torneo(List(carreraSimple), dragones, regla)
 
-    // Asignamos equipo a cada vikingo
-    val hipoConEquipo = Hipo.copy(equipo = Option("Equipo Rojo"))
-    val astridConEquipo = Astrid.copy(equipo = Option("Equipo Azul"))
-    val patanConEquipo = Patan.copy(equipo = Option("Equipo Azul"))
-    val patapezConEquipo = Patapez.copy(equipo = Option("Equipo Rojo"))
+    // Creamos equipos
+    lazy val equipoRojo1: Equipo = Equipo(nombre = "Equipo Rojo", vikingos = List(hipoConEquipo, patapezConEquipo, hipoConEquipo, patapezConEquipo))
+    lazy val equipoAzul: Equipo = Equipo(nombre = "Equipo Azul", vikingos = List(astridConEquipo, patanConEquipo))
+    lazy val equipoRojo2: Equipo = Equipo(nombre = "Equipo Rojo", vikingos = List(hipoConEquipo, patapezConEquipo))
 
-    // Equipos formados
-    val equipoRojo = Equipo(nombre = "Equipo Rojo", miembros = List(hipoConEquipo, patapezConEquipo))
-    val equipoAzul = Equipo(nombre = "Equipo Azul", miembros = List(astridConEquipo, patanConEquipo))
+    // Reasignamos vikingos con su equipo correspondiente
+    lazy val hipoConEquipo = Hipo.copy(equipo = Option(equipoRojo1))
+    lazy val patapezConEquipo = Patapez.copy(equipo = Option(equipoRojo1))
+    lazy val astridConEquipo = Astrid.copy(equipo = Option(equipoAzul))
+    lazy val patanConEquipo = Patan.copy(equipo = Option(equipoAzul))
 
-    val resultado = torneo(List(equipoRojo, equipoAzul))
+    val resultado1 = torneo(List(equipoRojo1, equipoAzul))
+    val resultado2 = torneo(List(equipoRojo2, equipoAzul))
 
-    // Gana el Equipo Azul pero solo queda un miembro, Patan
-    val equipoEsperado = Equipo(nombre = "Equipo Azul", miembros = List(patanConEquipo.aumentarHambre(5.0)))
+    // Verificamos que el equipo ganador es el rojo por tener más miembros
+    resultado1.get.nombre shouldBe "Equipo Rojo" // Unused expression without side effects ??
 
-    resultado shouldBe Option(equipoEsperado)
+    // Verificamos que el equipo ganador es el azul por desempate
+    resultado2.get.nombre shouldBe "Equipo Azul"
   }
 }

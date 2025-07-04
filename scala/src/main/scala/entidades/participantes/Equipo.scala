@@ -1,3 +1,5 @@
 package entidades.participantes
 
-case class Equipo(nombre: String, miembros: List[Vikingo]) extends Participante
+class Equipo(vikingos: => List[Vikingo], val nombre: String) extends Participante {
+  def miembros: List[Vikingo] = vikingos
+}

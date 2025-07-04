@@ -2,9 +2,7 @@ package entidades.torneo.postas
 
 import entidades.requisitos.{Requisito, RequisitoBarbarosidad, RequisitoItem}
 
-case class Combate(hambre: Double, requisito: Requisito) extends Posta {
-  override def hambreQueGenera(): Double = hambre
-  override def requisitoDeParticipacion(): Requisito = requisito
+case class Combate(override val hambreQueGenera: Double, override val requisitoDeParticipacion: Requisito) extends Posta {
 
-  require(requisitoDeParticipacion().isInstanceOf[RequisitoBarbarosidad] || requisitoDeParticipacion().isInstanceOf[RequisitoItem])
+  require(requisitoDeParticipacion.isInstanceOf[RequisitoBarbarosidad] || requisitoDeParticipacion.isInstanceOf[RequisitoItem])
 }

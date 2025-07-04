@@ -22,8 +22,8 @@ class Requerimiento3 extends AnyFlatSpec with Matchers {
   )
 
   val carrera: Carrera = Carrera(
-    hambre = 5,
-    requisito = NoRequisito
+    hambreQueGenera = 5,
+    requisitoDeParticipacion = NoRequisito
   )
 
   "apply" should "usar al dragón más veloz si mejora el rendimiento del vikingo en una carrera" in {

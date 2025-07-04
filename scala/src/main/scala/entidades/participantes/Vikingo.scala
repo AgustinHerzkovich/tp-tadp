@@ -9,14 +9,15 @@ import scala.util.{Failure, Success, Try}
 
 case class Vikingo(
     velocidad: Double,
-    peso : Double,
+    peso: Double,
     barbarosidad: Double,
     porcentajeHambre: Double,
-    item : Option[Item] = None,
-    equipo: Option[String] = None
+    item: Option[Item] = Option.empty,
+    equipo: Option[Equipo] = Option.empty,
+    nombre: String = "Vikingo"
   ) extends Individuo, Participante {
 
-  // Daño que puede causar, depende de su barbarosidad más el daño del ítem si lo tiene.
+  // Daño que puede causar, depende de su barbarosidad más el daño del ítem si lo tiene
   override def danio : Double = {
     this.barbarosidad + this.item.map(x =>x.danioItem).getOrElse(0.0)
   }
@@ -29,7 +30,7 @@ case class Vikingo(
 
   override def disminuirHambre(porcentaje: Double): Vikingo = this.copy(porcentajeHambre = this.porcentajeHambre - porcentaje)
 
-  // Acción por defecto luego de participar en una posta (puede ser overrideado por otras subclases como Patapez).
+  // Acción por defecto luego de participar en una posta (puede ser overrideado por otras subclases como Patapez)
   def accionLuegoDeParticiparEnPosta(): Vikingo = this
 
   // Intenta montar un dragón. Si falla algún requisito, lanza una excepción.

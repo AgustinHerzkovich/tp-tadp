@@ -8,13 +8,15 @@ object ReglaEquipos extends Regla {
     participantes.collect { case e: Equipo => e.miembros }.flatten
 
   private def reagruparEnEquipos(vikingos: List[Vikingo]): List[Equipo] = {
-    val agrupados = vikingos.groupBy(_.equipo.getOrElse("Sin equipo"))
-    agrupados.map { case (nombre, miembros) => Equipo(nombre, miembros) }.toList
+    val agrupados: Map[String, List[Vikingo]] = vikingos.groupBy(_.equipo.get.nombre) // Agrupa los vikingos según el equipo al que pertenecen (por nombre)
+    agrupados.map { case (nombre, miembros) => Equipo(miembros, nombre) }.toList
+    // Para cada entrada del Map (nombre del equipo original y sus miembros actuales),
+    // se crea un nuevo objeto Equipo con los miembros actualizados (los que sobrevivieron la posta)
+    // y se mantiene el nombre del equipo original
   }
 
-  def quienGana(participantes: List[_ <: Participante]): Participante = {
-    val vikingos = participantes.collect { case v: Vikingo => v }
-    val equipos = reagruparEnEquipos(vikingos)
-    equipos.maxByOption(_.miembros.length).getOrElse(equipos.head)
+  def quienGana(vikingos: List[Vikingo]): Equipo = {
+    val equipos: List[Equipo] = reagruparEnEquipos(vikingos) // Solo reagrupo al final del torneo para contar cuántos miembros hay en cada equipo
+    equipos.maxBy(_.miembros.length) // Gana aquel con mayor cantidad de miembros; en caso de empate, retorna el primero que encontró maxBy
   }
 }
