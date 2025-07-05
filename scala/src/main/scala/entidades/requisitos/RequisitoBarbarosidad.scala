@@ -2,7 +2,7 @@ package entidades.requisitos
 
 import entidades.participantes.Individuo
 
-class RequisitoBarbarosidad (barbarosidadMinima: Double) extends Requisito {
+class RequisitoBarbarosidad (barbarosidadMinima: Double) extends Requisito[Individuo] {
 
-  override def apply(individuo: Individuo): Boolean = individuo.barbarosidad >= barbarosidadMinima
+  def apply(individuo: Individuo): Boolean = individuo.barbarosidad >= barbarosidadMinima
 }

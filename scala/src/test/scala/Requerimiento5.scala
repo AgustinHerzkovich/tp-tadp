@@ -2,11 +2,9 @@ import entidades.dragones.obj.Chimuelo
 import entidades.dragones.{Dragon, FuriaNocturna}
 import entidades.participantes.{Equipo, Vikingo}
 import entidades.participantes.obj.{Astrid, Hipo, Patan, Patapez}
+import entidades.postas.Carrera
 import entidades.requisitos.obj.NoRequisito
-import entidades.torneo.Torneo
-import entidades.torneo.postas.Carrera
-import entidades.torneo.reglas.*
-import entidades.torneo.reglas.obj.{ReglaEquipos, ReglaHandicap, ReglaTorneoInverso}
+import entidades.torneo.{TorneoEliminacion, TorneoEquipos, TorneoEstandar, TorneoHandicap, TorneoInverso, TorneoVetoDragones}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -19,9 +17,8 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
   // Lista de vikingos para las pruebas
   val participantes: List[Vikingo] = List(Hipo, Astrid, Patan, Patapez)
 
-  "ReglaEstandar" should "eliminar la mitad inferior y elegir al primer vikingo" in {
-    val regla = ReglaEstandar()
-    val torneo = Torneo(List(carreraSimple), dragones, regla)
+  "TorneoEstandar" should "eliminar la mitad inferior y elegir al primer vikingo" in {
+    val torneo = TorneoEstandar(List(carreraSimple), dragones)
 
     val resultado = torneo(participantes)
 
@@ -29,9 +26,8 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
     resultado shouldBe Option(Hipo.aumentarHambre(5.0))
   }
 
-  "ReglaHandicap" should "invertir el orden de monturas y mantener reglas estándar de eliminación" in {
-    val regla = ReglaHandicap
-    val torneo = Torneo(List(carreraSimple), dragones, regla)
+  "TorneoHandicap" should "invertir el orden de monturas y mantener reglas estándar de eliminación" in {
+    val torneo = TorneoHandicap(List(carreraSimple), dragones)
 
     val resultado = torneo(participantes)
 
@@ -39,9 +35,8 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
     resultado shouldBe Option(Patapez.aumentarHambre(5.0))
   }
 
-  "ReglaTorneoInverso" should "mantener la mitad inferior y elegir al último" in {
-    val regla = ReglaTorneoInverso
-    val torneo = Torneo(List(carreraSimple), dragones, regla)
+  "TorneoInverso" should "mantener la mitad inferior y elegir al último" in {
+    val torneo = TorneoInverso(List(carreraSimple), dragones)
 
     val resultado = torneo(participantes)
 
@@ -49,9 +44,8 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
     resultado shouldBe Option(Astrid.aumentarHambre(5.0))
   }
 
-  "ReglaEliminacion" should "eliminar una cantidad fija de vikingos" in {
-    val regla = ReglaEliminacion(2)
-    val torneo = Torneo(List(carreraSimple), dragones, regla)
+  "TorneoEliminacion" should "eliminar una cantidad fija de vikingos" in {
+    val torneo = TorneoEliminacion(List(carreraSimple), dragones, 2)
 
     val resultado = torneo(participantes)
 
@@ -59,7 +53,7 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
     resultado shouldBe Option(Hipo.aumentarHambre(5.0))
   }
 
-  "ReglaVetoDragones" should "filtrar dragones según el criterio establecido" in {
+  "TorneoVetoDragones" should "filtrar dragones según el criterio establecido" in {
     // Creamos dragones con diferentes daños
     val dragonesVariados = List(
       FuriaNocturna(peso = 5000, danio = 30),
@@ -67,8 +61,7 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
       FuriaNocturna(peso = 5000, danio = 40)
     )
 
-    val regla = ReglaVetoDragones(_.danio > 50)
-    val torneo = Torneo(List(carreraSimple), dragonesVariados, regla)
+    val torneo = TorneoVetoDragones(List(carreraSimple), dragonesVariados, _.danio > 50)
 
     val resultado = torneo(participantes)
 
@@ -76,9 +69,8 @@ class Requerimiento5 extends AnyFlatSpec with Matchers {
     resultado shouldBe Option(Hipo.aumentarHambre(5.0))
   }
 
-  "ReglaEquipos" should "eliminar la mitad de los peores y declarar ganador al equipo con más miembros" in {
-    val regla = ReglaEquipos
-    val torneo = Torneo(List(carreraSimple), dragones, regla)
+  "TorneoEquipos" should "eliminar la mitad de los peores y declarar ganador al equipo con más miembros" in {
+    val torneo = TorneoEquipos(List(carreraSimple), dragones)
 
     // Creamos equipos
     lazy val equipoRojo1: Equipo = Equipo(nombre = "Equipo Rojo", vikingos = List(hipoConEquipo, patapezConEquipo, hipoConEquipo, patapezConEquipo))

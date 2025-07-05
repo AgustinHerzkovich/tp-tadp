@@ -1,8 +1,8 @@
 package entidades.requisitos
 
-import entidades.participantes.Individuo
+import entidades.participantes.Vikingo
 
-class RequisitoPesoMaximo(pesoMaximoDelVikingo: Double) extends Requisito{
+class RequisitoPesoMaximo(pesoMaximoDelVikingo: Double) extends Requisito[Vikingo]{
 
-  override def apply(individuo: Individuo): Boolean =  individuo.peso <= pesoMaximoDelVikingo
+  def apply(vikingo: Vikingo): Boolean =  vikingo.peso <= pesoMaximoDelVikingo
 }

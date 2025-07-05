@@ -2,7 +2,7 @@ package entidades.requisitos
 
 import entidades.participantes.Individuo
 
-trait Requisito {
+trait Requisito[T <: Individuo] {
 
-  def apply(individuo: Individuo) : Boolean
+  def apply(individuo: T) : Boolean
 }

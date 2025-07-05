@@ -1,8 +1,8 @@
 import entidades.participantes.Vikingo
 import entidades.dragones.{Dragon, FuriaNocturna, Gronckle}
 import entidades.items.Arma
+import entidades.postas.Carrera
 import entidades.requisitos.obj.NoRequisito
-import entidades.torneo.postas.Carrera
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 

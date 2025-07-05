@@ -1,4 +1,4 @@
-package entidades.torneo.postas
+package entidades.postas
 
 import entidades.participantes.{Individuo, Jinete, Vikingo}
 import entidades.dragones.Dragon
@@ -8,7 +8,7 @@ abstract class Posta {
 
   val hambreQueGenera: Double
 
-  val requisitoDeParticipacion: Requisito
+  val requisitoDeParticipacion: Requisito[Individuo]
 
   // Aplica la posta: arma los participantes posibles (vikingos o jinetes), ordena por rendimiento,
   // los desmonta y les aplica los efectos post-participación (hambre + posibles acciones)
@@ -22,7 +22,7 @@ abstract class Posta {
         .accionLuegoDeParticiparEnPosta()) // Hook para efectos personalizados luego de participar (como Patapez)
   }
 
-  protected def puedeParticipar(individuo: Individuo): Boolean = requisitoDeParticipacion(individuo) && !individuo.aumentarHambre(hambreQueGenera).estaHambriento()
+  private def puedeParticipar(individuo: Individuo): Boolean = requisitoDeParticipacion(individuo) && !individuo.aumentarHambre(hambreQueGenera).estaHambriento()
 
   // Convierte una lista de individuos en una lista de vikingos desmontados (para continuar el torneo)
   private def desmontarIndividuos(individuos: List[Individuo]): List[Vikingo] = individuos.map {
@@ -33,7 +33,7 @@ abstract class Posta {
   // Arma la lista de individuos que efectivamente participan en esta posta, seleccionando
   // para cada vikingo su mejor forma de competir (montado o no), si es que puede hacerlo
   private def armarIndividuos(vikingos: List[Vikingo], dragonesDisponibles: List[Dragon]): List[Individuo] = {
-    val (individuos, _) : (List[Individuo], List[Dragon]) = vikingos.foldLeft((List.empty[Individuo], dragonesDisponibles)) {
+    val (individuos, _) : (List[Individuo], List[Dragon]) = vikingos.foldLeft(List.empty[Individuo], dragonesDisponibles) {
       case ((individuosAcumulados, dragonesRestantes), vikingo) => // Parámetros de lambda, descomponemos tupla
         mejorOpcion(vikingo, dragonesRestantes)
           .map(individuo => agregarIndividuo(individuosAcumulados, dragonesRestantes, individuo)) // Si hay una opción válida, la agregamos a la lista de individuos y actualizamos la lista de dragones

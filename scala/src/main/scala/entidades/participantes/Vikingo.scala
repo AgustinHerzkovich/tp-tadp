@@ -2,7 +2,7 @@ package entidades.participantes
 
 import entidades.dragones.Dragon
 import entidades.items.Item
-import entidades.torneo.postas.Posta
+import entidades.postas.Posta
 
 import scala.util.{Failure, Success, Try}
 

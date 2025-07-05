@@ -2,7 +2,7 @@ package entidades.requisitos
 
 import entidades.participantes.Individuo
 
-class RequisitoCargaMinima(cargaMinima : Double) extends Requisito {
+class RequisitoCargaMinima(cargaMinima : Double) extends Requisito[Individuo] {
 
-  override def apply(individuo: Individuo): Boolean = individuo.cargaMaxima >= cargaMinima
+  def apply(individuo: Individuo): Boolean = individuo.cargaMaxima >= cargaMinima
 }

@@ -1,7 +1,7 @@
 package entidades.participantes
 
 import entidades.items.Item
-import entidades.torneo.postas.{Carrera, Combate, Pesca, Posta}
+import entidades.postas.{Carrera, Combate, Pesca, Posta}
 
 trait Individuo() {
 

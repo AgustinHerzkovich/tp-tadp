@@ -1,8 +1,8 @@
 package entidades.requisitos
 
-import entidades.participantes.Individuo
+import entidades.participantes.Vikingo
 
-class RequisitoDanio(danioMaximo : Double) extends Requisito{
+class RequisitoDanio(danioMaximo : Double) extends Requisito[Vikingo]{
 
-  override def apply(individuo: Individuo): Boolean = individuo.danio <= danioMaximo
+  def apply(vikingo: Vikingo): Boolean = vikingo.danio <= danioMaximo
 }

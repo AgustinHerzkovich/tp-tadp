@@ -1,12 +1,11 @@
 import entidades.dragones.{Dragon, FuriaNocturna}
 import entidades.items.Arma
-import entidades.participantes.Vikingo
+import entidades.participantes.{Individuo, Vikingo}
 import entidades.participantes.obj.{Astrid, Hipo, Patan, Patapez}
+import entidades.postas.{Carrera, Combate, Pesca, Posta}
 import entidades.requisitos.obj.NoRequisito
 import entidades.requisitos.{RequisitoCargaMinima, RequisitoItem}
-import entidades.torneo.Torneo
-import entidades.torneo.postas.{Carrera, Combate, Pesca, Posta}
-import entidades.torneo.reglas.ReglaEstandar
+import entidades.torneo.TorneoEstandar
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -15,15 +14,13 @@ class Requerimiento4 extends AnyFlatSpec with Matchers {
   val espada: Arma = Arma("Espada Valyria", 40.0)
 
   val pesca: Pesca = Pesca(hambreQueGenera = 5, requisitoDeParticipacion = RequisitoCargaMinima(200))
-  val combate: Combate = Combate(hambreQueGenera = 5, requisitoDeParticipacion = RequisitoItem(i => i.isInstanceOf[Arma]))
+  val combate: Combate = Combate(hambreQueGenera = 5, requisitoDeParticipacion = RequisitoItem[Individuo](i => i.isInstanceOf[Arma]))
   val carrera: Carrera = Carrera(hambreQueGenera = 50, requisitoDeParticipacion = NoRequisito)
   val postas: List[Posta] = List(pesca, combate, carrera)
 
   val dragones: List[Dragon] = List.fill(3)(FuriaNocturna(peso = 5000.0, danio = 50.0))
 
-  val regla = ReglaEstandar()
-
-  val torneo = Torneo(postas, dragones, regla)
+  val torneo = TorneoEstandar(postas, dragones)
 
   "sin ganador" should "no quedan más competidores en pie debido a la posta combate, por lo tanto no hay ganador" in {
     val resultado = torneo(List(Hipo, Hipo, Hipo, Hipo))
